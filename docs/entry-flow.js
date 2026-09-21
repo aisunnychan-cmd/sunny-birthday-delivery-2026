@@ -1,5 +1,5 @@
 (() => {
-  const ACCESS_VERSION = 'two-stage-love-games-v4';
+  const ACCESS_VERSION = 'two-stage-love-games-v5';
   const FIRST_PASSWORD = '只准芷瑩入場';
   const SECOND_PASSWORD = '因為我❤️你';
   const CHASE_TOTAL = 12;
@@ -80,10 +80,13 @@
     chaseTarget: document.querySelector('#loveTarget'),
     chaseCount: document.querySelector('#chaseCount'),
     chaseBar: document.querySelector('#chaseBar'),
+    chasePlayfield: document.querySelector('.love-playfield'),
+    chaseLive: document.querySelector('#chaseLive'),
     heart: document.querySelector('#heartChallenge'),
     heartButton: document.querySelector('#heartButton'),
     heartCount: document.querySelector('#heartCount'),
     heartBar: document.querySelector('#heartBar'),
+    heartStage: document.querySelector('.heart-stage'),
     finale: document.querySelector('#loveFinale'),
     finaleWords: document.querySelector('#finaleWords'),
     skip: document.querySelector('#skipFinale')
@@ -91,9 +94,9 @@
 
   const stateKeys = {
     version: 'sunny-access-version',
-    step: 'sunny-access-step-v4',
-    chase: 'sunny-love-chase-v4',
-    heart: 'sunny-heart-count-v4',
+    step: 'sunny-access-step-v5',
+    chase: 'sunny-love-chase-v5',
+    heart: 'sunny-heart-count-v5',
     complete: 'sunny-entry-ok'
   };
   let accessStage = 1;
@@ -105,6 +108,58 @@
     [18, 25], [72, 30], [42, 43], [80, 55], [22, 62], [58, 72],
     [35, 82], [73, 83], [15, 47], [60, 20], [46, 58], [27, 74]
   ];
+  const decoyPositions = [
+    [[68, 28], [38, 72]],
+    [[20, 28], [76, 72]],
+    [[72, 42], [18, 78]]
+  ];
+  const chaseFeedback = [
+    '第一個捉到啦 💕', '好快手喎', '愛你又走咗去第二邊', '熱身完成',
+    '捉到我啦', '再嚟一次', '差少少就追到晒', '開始有煙幕啦',
+    '留意會發光嗰個', '假嘅會走開㗎', '最後兩個，加油', '第一關愛意已確認'
+  ];
+  const heartPhrases = [
+    '心意正在充電', '每一下都係掛住你', '偷偷加多一點鍾意', '今日都係偏愛你',
+    '想抱你一下', '心動訊號已收到', '再近一點', '只准你收下',
+    '愛意開始滿瀉', '最後幾下啦', '準備爆發', '全部愛意已送達'
+  ];
+
+  function buildProgressiveEffects() {
+    elements.chaseMessage = document.createElement('p');
+    elements.chaseMessage.className = 'chase-feedback';
+    elements.chaseMessage.setAttribute('aria-live', 'polite');
+    elements.chaseMessage.textContent = '先捉住第一個「愛你」';
+    elements.chasePlayfield.before(elements.chaseMessage);
+
+    elements.chaseComplete = document.createElement('div');
+    elements.chaseComplete.className = 'chase-complete-card';
+    elements.chaseComplete.innerHTML = '<span>♥</span><strong>第一關愛意已確認</strong>';
+    elements.chase.append(elements.chaseComplete);
+
+    const heartBase = elements.heartButton.querySelector('span');
+    heartBase.className = 'heart-base';
+    elements.heartFill = document.createElement('span');
+    elements.heartFill.className = 'heart-fill';
+    elements.heartFill.textContent = '♥';
+    elements.heartFill.setAttribute('aria-hidden', 'true');
+    elements.heartButton.append(elements.heartFill);
+
+    elements.heartMessage = document.createElement('p');
+    elements.heartMessage.className = 'heart-message';
+    elements.heartMessage.setAttribute('aria-live', 'polite');
+    elements.heartMessage.textContent = heartPhrases[0];
+
+    elements.heartStamps = document.createElement('div');
+    elements.heartStamps.className = 'heart-stamps';
+    ['心動', '掛念', '偏愛', '送達'].forEach(label => {
+      const stamp = document.createElement('span');
+      stamp.textContent = label;
+      elements.heartStamps.append(stamp);
+    });
+    elements.heartStage.append(elements.heartMessage, elements.heartStamps);
+  }
+
+  buildProgressiveEffects();
 
   function readCount(key, maximum) {
     const value = Number.parseInt(sessionStorage.getItem(key) || '0', 10);
@@ -179,6 +234,20 @@
     elements.chaseBar.style.width = `${(count / CHASE_TOTAL) * 100}%`;
     elements.chaseTarget.style.left = `${left}%`;
     elements.chaseTarget.style.top = `${top}%`;
+    elements.chaseTarget.style.setProperty('--target-rotate', `${((count % 5) - 2) * 6}deg`);
+    elements.chaseTarget.classList.toggle('playful', count >= 4 && count < 8);
+    elements.chaseTarget.classList.toggle('glowing', count >= 8 && count < 11);
+    elements.chaseTarget.classList.toggle('final-target', count === 11);
+    elements.chaseMessage.textContent = count === 0
+      ? '先捉住第一個「愛你」'
+      : count < 4
+        ? '愛你留下咗一條心心軌跡'
+        : count < 8
+          ? '佢開始識得轉身走避啦'
+          : count < 11
+            ? '小心煙幕：撳會發光嗰個'
+            : '最後一個縮細咗，捉實佢！';
+    renderDecoys(count);
   }
 
   function showLoveChase() {
@@ -209,24 +278,72 @@
     }
   }
 
+  function haptic(pattern) {
+    if (typeof navigator.vibrate === 'function') navigator.vibrate(pattern);
+  }
+
+  function leaveLoveTrail(origin) {
+    const rect = origin.getBoundingClientRect();
+    const holderRect = elements.chasePlayfield.getBoundingClientRect();
+    const trail = document.createElement('span');
+    trail.className = 'love-trail';
+    trail.textContent = '♥';
+    trail.style.left = `${rect.left - holderRect.left + rect.width / 2}px`;
+    trail.style.top = `${rect.top - holderRect.top + rect.height / 2}px`;
+    elements.chasePlayfield.append(trail);
+    trail.addEventListener('animationend', () => trail.remove(), {once: true});
+  }
+
+  function clearDecoys() {
+    elements.chasePlayfield.querySelectorAll('.love-decoy').forEach(decoy => decoy.remove());
+  }
+
+  function renderDecoys(count) {
+    clearDecoys();
+    if (count < 8 || count > 10) return;
+    decoyPositions[count - 8].forEach(([left, top], index) => {
+      const decoy = document.createElement('button');
+      decoy.type = 'button';
+      decoy.className = 'love-target love-decoy';
+      decoy.textContent = '愛你';
+      decoy.style.left = `${left}%`;
+      decoy.style.top = `${top}%`;
+      decoy.style.setProperty('--target-rotate', `${index ? 8 : -8}deg`);
+      decoy.addEventListener('click', () => {
+        decoy.classList.remove('wrong');
+        void decoy.offsetWidth;
+        decoy.classList.add('wrong');
+        elements.chaseMessage.textContent = '呢個係煙幕，再搵下會發光嗰個 💕';
+        elements.chaseLive.textContent = '撳中煙幕，請尋找發光的愛你';
+        haptic(15);
+      });
+      elements.chasePlayfield.append(decoy);
+    });
+  }
+
   function catchLove() {
     if (chaseLocked) return;
     chaseLocked = true;
     const count = Math.min(CHASE_TOTAL, readCount(stateKeys.chase, CHASE_TOTAL) + 1);
     sessionStorage.setItem(stateKeys.chase, String(count));
+    clearDecoys();
+    leaveLoveTrail(elements.chaseTarget);
     elements.chaseTarget.classList.remove('caught');
     void elements.chaseTarget.offsetWidth;
     elements.chaseTarget.classList.add('caught');
     spawnParticles(elements.chaseTarget, 6);
+    haptic(count === CHASE_TOTAL ? [25, 35, 70] : 18);
     elements.chaseCount.textContent = `已捉到 ${count} / ${CHASE_TOTAL}`;
     elements.chaseBar.style.width = `${(count / CHASE_TOTAL) * 100}%`;
+    elements.chaseMessage.textContent = chaseFeedback[count - 1];
+    elements.chaseLive.textContent = `${chaseFeedback[count - 1]}，已捉到 ${count} 個愛你`;
     if (count === CHASE_TOTAL) {
       elements.chase.classList.add('complete');
       setTimeout(() => {
         elements.chase.classList.remove('complete');
         showSecondCheck();
         chaseLocked = false;
-      }, 700);
+      }, 1050);
       return;
     }
     setTimeout(() => {
@@ -239,9 +356,29 @@
 
   function updateHeart() {
     const count = readCount(stateKeys.heart, HEART_TOTAL);
+    const ratio = count / HEART_TOTAL;
+    const phase = Math.min(4, Math.floor(count / 6) + 1);
     elements.heartCount.textContent = `${count} / ${HEART_TOTAL}`;
-    elements.heartBar.style.width = `${(count / HEART_TOTAL) * 100}%`;
-    elements.heartButton.style.setProperty('--heart-scale', String(1 + (count / HEART_TOTAL) * 0.82));
+    elements.heartBar.style.width = `${ratio * 100}%`;
+    elements.heartButton.style.setProperty('--heart-scale', String(1 + ratio * 0.18));
+    elements.heartButton.style.setProperty('--heart-progress', `${ratio * 360}deg`);
+    elements.heartButton.style.setProperty('--heart-clip', `${100 - ratio * 100}%`);
+    elements.heart.classList.remove('phase-1', 'phase-2', 'phase-3', 'phase-4', 'urgent');
+    elements.heart.classList.add(`phase-${phase}`);
+    if (count >= 18 && count < HEART_TOTAL) elements.heart.classList.add('urgent');
+    const phraseIndex = count < 6
+      ? Math.min(3, count % 4)
+      : count < 12
+        ? 4 + (count % 4)
+        : count < 18
+          ? 5 + (count % 4)
+          : 8 + (count % 4);
+    elements.heartMessage.textContent = count === HEART_TOTAL
+      ? heartPhrases[11]
+      : heartPhrases[Math.min(11, phraseIndex)];
+    [...elements.heartStamps.children].forEach((stamp, index) => {
+      stamp.classList.toggle('active', count >= (index + 1) * 6);
+    });
   }
 
   function showHeartChallenge() {
@@ -298,10 +435,11 @@
     void elements.heartButton.offsetWidth;
     elements.heartButton.classList.add('pressed');
     spawnParticles(elements.heartButton, count === HEART_TOTAL ? 14 : 5);
+    haptic(count === HEART_TOTAL ? [35, 30, 80] : count >= 18 ? 24 : 12);
     updateHeart();
     if (count === HEART_TOTAL) {
-      elements.heart.classList.add('complete');
-      setTimeout(showFinale, 750);
+      setTimeout(() => elements.heart.classList.add('complete'), 240);
+      setTimeout(showFinale, 1150);
       return;
     }
     setTimeout(() => {
