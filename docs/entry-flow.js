@@ -1,5 +1,5 @@
 (() => {
-  const ACCESS_VERSION = 'two-stage-love-games-v5';
+  const ACCESS_VERSION = 'two-stage-love-games-v6';
   const FIRST_PASSWORD = '只准芷瑩入場';
   const SECOND_PASSWORD = '因為我❤️你';
   const CHASE_TOTAL = 12;
@@ -66,6 +66,7 @@
 
   const elements = {
     gate: document.querySelector('#entryGate'),
+    app: document.querySelector('.app'),
     card: document.querySelector('#entryCard'),
     form: document.querySelector('#entryForm'),
     pass: document.querySelector('#entryPass'),
@@ -94,9 +95,9 @@
 
   const stateKeys = {
     version: 'sunny-access-version',
-    step: 'sunny-access-step-v5',
-    chase: 'sunny-love-chase-v5',
-    heart: 'sunny-heart-count-v5',
+    step: 'sunny-access-step-v6',
+    chase: 'sunny-love-chase-v6',
+    heart: 'sunny-heart-count-v6',
     complete: 'sunny-entry-ok'
   };
   let accessStage = 1;
@@ -160,6 +161,8 @@
   }
 
   buildProgressiveEffects();
+  elements.app.setAttribute('aria-hidden', 'true');
+  elements.app.inert = true;
 
   function readCount(key, maximum) {
     const value = Number.parseInt(sessionStorage.getItem(key) || '0', 10);
@@ -187,6 +190,9 @@
 
   function enterService() {
     clearTimeout(finaleTimer);
+    elements.app.removeAttribute('aria-hidden');
+    elements.app.inert = false;
+    elements.gate.setAttribute('aria-hidden', 'true');
     elements.gate.classList.add('hide');
     document.body.classList.remove('locked');
     elements.pass.blur();
