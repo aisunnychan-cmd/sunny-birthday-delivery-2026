@@ -510,24 +510,34 @@
   elements.heartButton.addEventListener('click', pressHeart);
   elements.skip.addEventListener('click', finishFinale);
 
-  document.querySelectorAll('[data-go]').forEach(button => {
-    button.addEventListener('click', () => {
-      const target = document.getElementById(button.dataset.go);
-      if (!target) return;
-      setActiveNav(button.dataset.go);
-      target.scrollIntoView({behavior: 'smooth', block: 'start'});
+  const navLinks = [...document.querySelectorAll('[data-go]')];
+  const storySections = [...document.querySelectorAll('[data-section]')];
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      setActiveNav(link.dataset.go);
     });
   });
 
-  if ('IntersectionObserver' in window) {
-    const sectionObserver = new IntersectionObserver(entries => {
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActiveNav(visible.target.id);
-    }, {rootMargin: '-25% 0px -55% 0px', threshold: [0.05, 0.2, 0.5]});
-    document.querySelectorAll('[data-section]').forEach(section => sectionObserver.observe(section));
+  let navTicking = false;
+  function updateNavFromScroll() {
+    navTicking = false;
+    if (!storySections.length) return;
+    const marker = window.scrollY + Math.min(window.innerHeight * 0.38, 260);
+    let current = storySections[0];
+    storySections.forEach(section => {
+      if (section.offsetTop <= marker) current = section;
+    });
+    setActiveNav(current.id);
   }
+
+  window.addEventListener('scroll', () => {
+    if (navTicking) return;
+    navTicking = true;
+    requestAnimationFrame(updateNavFromScroll);
+  }, {passive:true});
+  window.addEventListener('resize', updateNavFromScroll);
+  updateNavFromScroll();
 
   resetVersion();
   if (sessionStorage.getItem(stateKeys.complete) === 'yes') {
