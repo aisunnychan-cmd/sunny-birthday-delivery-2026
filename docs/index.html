@@ -25,12 +25,178 @@
     @keyframes urgentGlow{50%{transform:translate(var(--heart-x,0px),var(--heart-y,0px)) scale(calc(var(--heart-scale,1) + .05));box-shadow:0 0 0 12px rgba(183,79,96,.12),0 18px 46px rgba(143,54,70,.38)}}
     @keyframes heartBurst{55%{transform:translate(var(--heart-x,0px),var(--heart-y,0px)) scale(2.35)}to{transform:translate(var(--heart-x,0px),var(--heart-y,0px)) scale(3);opacity:0}}
 
+  
+    /* Single-page birthday story */
+    html{scroll-behavior:smooth}
+    .app{overflow:visible}
+    .screen,.screen.active{display:block;min-height:auto;padding:0;animation:none;scroll-margin-top:18px}
+    .story-section{position:relative}
+    .section-shell{padding:34px 20px 46px}
+    .story-section:not(:first-child){border-top:1px solid var(--line)}
+    .section-lead{max-width:520px;margin:-10px 0 24px;color:#657d6c;font-size:13px;line-height:1.7}
+    .status-grid{display:grid;gap:10px}
+    .status-grid article{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;padding:14px 15px;border:1px solid var(--line);border-radius:14px;background:#fffaf0}
+    .status-grid small,.mini-stats span,.story-timeline small,.gift-package small,.gift-reveal-content small{display:block;color:#9b7a49;font-size:9px;font-weight:850;letter-spacing:.12em}
+    .status-grid b{display:block;margin-top:3px;font-size:14px}
+    .status-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#245e46;color:#fffaf0;font-weight:900}
+    .birthday-note{margin-top:16px;padding:19px;border-radius:17px;background:linear-gradient(145deg,#173f30,#2e6b51);color:#fffaf0}
+    .birthday-note span{display:block;margin-bottom:7px;color:#d7bc7f;font-size:9px;font-weight:850;letter-spacing:.14em}
+    .birthday-note strong{font-size:16px;line-height:1.55}
+    .mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .mini-stats div{padding:14px;border-radius:14px;background:#eef1e7}
+    .mini-stats b{display:block;margin-top:5px;font-size:12px;line-height:1.45}
+    .us-section{background:#f7f2e7}
+    .story-timeline{position:relative;margin-top:12px}
+    .story-timeline:before{content:"";position:absolute;left:8px;top:8px;bottom:16px;width:1px;background:#b9cab9}
+    .story-timeline article{position:relative;display:grid;grid-template-columns:95px 1fr;gap:20px;padding:0 0 30px 28px}
+    .story-timeline article:before{content:"";position:absolute;left:3px;top:5px;width:11px;height:11px;border-radius:50%;background:#82a677;border:2px solid #f7f2e7;box-shadow:0 0 0 1px #82a677}
+    .story-date{color:#7a8e80;font-size:11px;font-weight:800}
+    .story-timeline h3{margin:4px 0 5px;font-size:18px}
+    .story-timeline p{margin:0;color:#657d6c;font-size:12px;line-height:1.65}
+    .relationship-quote{margin:0;padding:20px;border-left:3px solid #bd9560;border-radius:0 14px 14px 0;background:#efe5d2;color:#345744;font:700 15px/1.75 ui-rounded,"PingFang HK",sans-serif}
+    .memory .section-shell{padding-bottom:52px}
+    .gift .section-shell{padding-top:42px;padding-bottom:56px}
+    .gift-package{margin:24px 0 14px;padding:26px 20px;border:1px solid rgba(215,188,127,.45);border-radius:18px;text-align:center;background:rgba(255,255,255,.07)}
+    .gift-symbol{display:block;margin-bottom:8px;color:#d7bc7f;font-size:38px}
+    .gift-package strong{display:block;margin:8px 0 12px;color:#fffaf0;font-size:20px}
+    .gift-package p{margin:0!important;color:#d5e4d3!important}
+    .gift-reveal{overflow:hidden;margin-top:14px;border:1px solid rgba(215,188,127,.55);border-radius:16px;background:rgba(255,255,255,.07)}
+    .gift-reveal summary{cursor:pointer;list-style:none;padding:16px 18px;color:#173b2d;background:#d7bc7f;font-weight:900;text-align:center}
+    .gift-reveal summary::-webkit-details-marker{display:none}
+    .gift-reveal-content{padding:28px 18px;text-align:center}
+    .shoe-icon{display:block;font-size:48px}
+    .gift-reveal-content h3{margin:8px 0;color:#fffaf0;font:400 36px/1.1 Georgia,"PingFang HK",serif}
+    .gift-reveal-content p{margin:0!important}
+    .ending-note{text-align:center;color:#b9d1bf!important;font-size:10px!important;letter-spacing:.08em}
+    .bottom button{cursor:pointer}
+    @media(min-width:681px){
+      .screen,.screen.active{padding:0}
+      .section-shell{padding:46px 34px 56px}
+      .mini-stats{grid-template-columns:1fr 1fr}
+      .status-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .status-grid article{grid-template-columns:32px 1fr}
+      .story-timeline article{grid-template-columns:130px 1fr}
+    }
+    @media(max-width:420px){
+      .mini-stats{grid-template-columns:1fr}
+      .story-timeline article{grid-template-columns:1fr;gap:6px;padding-left:28px}
+    }
+
   </style>
 </head>
 <body class="locked"><div class="entry-gate" id="entryGate" role="dialog" aria-modal="true" aria-label="生日配送私人入口"><div class="entry-card" id="entryCard"><div class="entry-poster"><img id="entryPoster" src="images/memory-01.webp" alt="生日回憶海報"></div><p class="eyebrow" id="entryStage">FIRST CHECK · 01 / 02</p><h2 id="entryTitle">先核對第一個<br>美好暗號</h2><p id="entryCopy">提示：通行證持有人只有一位 💕</p><div class="entry-order"><span>DELIVERY FILE</span><b>20261004</b></div><form id="entryForm"><label for="entryPass" id="entryLabel">第一個入口口令</label><input id="entryPass" autocomplete="off" placeholder="輸入口令" aria-describedby="entryError entryLogNote" maxlength="200" autofocus><button type="submit" id="entryButton">進入下一頁</button><p class="entry-error" id="entryError" aria-live="polite"></p></form><p class="entry-note" id="entryLogNote">暗號嘗試會由 Sunny 保存，留作生日回憶 💕。</p><p class="entry-note">SUNNY DELIVERY SERVICE · PRIVATE EDITION</p></div><section class="entry-game" id="loveChase" aria-labelledby="chaseTitle" hidden><div class="entry-game-inner"><p class="eyebrow">LOVE CHECK · 01.5 / 02</p><h2 id="chaseTitle">捉住 12 個「愛你」</h2><p class="entry-game-copy">捉到第 5 個之後會出現假「愛你」；撳錯會退後一格。真嗰個後段會縮細兼發光 💕</p><div class="game-progress"><strong><span id="chaseCount">已捉到 0 / 12</span><span>LOVE HUNT</span></strong><div class="game-progress-track"><i id="chaseBar"></i></div></div><div class="love-playfield"><button class="love-target" id="loveTarget" type="button" aria-describedby="chaseCount">愛你</button></div><p class="entry-game-status" aria-live="polite" id="chaseLive"></p></div></section><section class="entry-game heart-challenge" id="heartChallenge" aria-labelledby="heartTitle" hidden><div class="entry-game-inner"><p class="eyebrow">FINAL LOVE CHECK</p><h2 id="heartTitle">撳爆呢顆心</h2><p class="entry-game-copy">撳 24 下。過一半之後心心會開始走位，最後幾下仲會縮細 💕</p><div class="game-progress"><strong><span id="heartCount">0 / 24</span><span>HEART POWER</span></strong><div class="game-progress-track"><i id="heartBar"></i></div></div><div class="heart-stage"><button class="heart-button" id="heartButton" type="button" aria-describedby="heartCount" aria-label="撳大心心"><span aria-hidden="true">♥</span></button><span class="heart-instruction">每撳一下，心意再大一點</span></div></div></section><section class="entry-game love-finale" id="loveFinale" aria-labelledby="finaleTitle" hidden><div class="finale-stage" id="finaleWords" aria-hidden="true"></div><div class="finale-copy"><p class="eyebrow">SPECIAL DELIVERY COMPLETE</p><h2 id="finaleTitle">美「臀」愛意<br>已送達</h2><p>愛你、愛你、愛你——全部都係畀你。</p><button class="finale-skip" id="skipFinale" type="button">立即收下</button></div></section></div><div class="app">
-  <section class="screen active" id="home"><div class="hero"><div class="top"><span class="mark">♥</span><span>SUNNY DELIVERY SERVICE</span><span class="pill">ORDER 20261004</span></div><p class="eyebrow">SPECIAL BIRTHDAY DELIVERY · 2026</p><h1>為你送上<br><em>美「臀」服務</em></h1><p class="subtitle">以下是瑩女友的生日服務 ^_^</p><div class="recipient"><div><span>RECIPIENT</span><b>Tszying</b></div><div><span>DELIVERY DATE</span><b>10 · 04 · 2026</b></div></div><div class="card"><strong><span class="tick">✓</span>訂單已確認</strong><p id="countdown">正在計算派送日子</p><div class="bar"><i></i></div><div class="bar-label"><span>已收到心意</span><span>準備派送</span><span>完成</span></div></div></div><p class="section-title">LATEST DELIVERY LOG</p><h2>最近操作紀錄</h2><div class="order delivery-log"><article><span class="num">✓</span><div><p>生日鞋履 · 已完成 <span class="tag">已入手</span></p><h3>生日禮物已準備好</h3></div><span class="icon">◌</span></article></div></section>
-  <section class="screen" id="route"><div class="top"><span class="mark">♥</span><span>BIRTHDAY PREP</span><span class="pill">10 · 04</span></div><p class="section-title">BIRTHDAY GIFT</p><h2>生日準備</h2><div class="order"><article><span class="num">✓</span><div><p>生日鞋履 <span class="tag">已入手</span></p><h3>生日禮物已準備好</h3></div><span class="icon">◌</span></article></div><p class="section-title">DELIVERY HISTORY</p><h2>由 2024-12-12 開始</h2><div class="timeline"><div><p>2024 · 12 · 12</p><b>開始拍拖</b></div><div><p id="days">一路累積的日子</p><b>一路累積的日子</b></div><div><p>2026 · 10 · 04</p><b>今日特別服務</b></div></div></section>
-  <section class="screen memory" id="memory"><div class="top"><span class="mark">♥</span><span>MEMORY FILES</span><span class="pill">2026</span></div><p class="section-title">2026 MEMORY FILES</p><h2>今年的回憶已入庫</h2><div class="memory-grid"><figure class="photo"><img src="images/memory-01.webp" alt="Tszying 的生日回憶海報一"><figcaption><span class="file">FILE 01</span>第一張記憶海報 · 已存檔</figcaption></figure><figure class="photo"><img src="images/memory-02.webp" alt="Tszying 的生日回憶海報二"><figcaption><span class="file">FILE 02</span>第二張記憶海報 · 已存檔</figcaption></figure><figure class="photo"><img src="images/memory-03.webp" alt="Tszying 的生日回憶海報三"><figcaption><span class="file">FILE 03</span>第三張記憶海報 · 已存檔</figcaption></figure><figure class="photo"><img src="images/memory-04.webp" alt="Tszying 的生日回憶海報四"><figcaption><span class="file">FILE 04</span>第四張記憶海報 · 已存檔</figcaption></figure></div></section>
-  <section class="screen gift" id="gift"><div class="top"><span class="mark">♥</span><span>BIRTHDAY GIFT</span><span class="pill" id="giftPill">READY</span></div><p class="section-title">BIRTHDAY-ONLY ACCESS</p><h2 id="giftTitle">生日鞋履<br>已準備完成</h2><p id="giftCopy">兩個專屬口令已確認；你的生日禮物已經準備好。</p><div class="result show" id="result"><small>SPECIAL DELIVERY READY</small><h3>生日鞋履<br>已入手</h3><span class="heart">♥</span><p>你的外賣專員 Sunny 已準備好這份心意。</p></div><p class="notice">你的外賣專員 Sunny。</p></section>
-  <nav class="bottom" aria-label="網站導覽"><button class="active" data-go="home"><i>⌂</i>訂單</button><button data-go="route"><i>⌁</i>行程</button><button data-go="memory"><i>▧</i>回憶</button><button data-go="gift"><i>♢</i>禮物</button></nav>
+  <section class="screen active story-section order-section" id="home" data-section="home">
+    <div class="hero">
+      <div class="top"><span class="mark">♥</span><span>SUNNY DELIVERY SERVICE</span><span class="pill">ORDER 20261004</span></div>
+      <p class="eyebrow">SPECIAL BIRTHDAY DELIVERY · 2026</p>
+      <h1>為你送上<br><em>美「臀」服務</em></h1>
+      <p class="subtitle">以下是瑩女友的生日服務 ^_^</p>
+      <div class="recipient">
+        <div><span>RECIPIENT</span><b>Tszying</b></div>
+        <div><span>DELIVERY DATE</span><b>10 · 04 · 2026</b></div>
+      </div>
+      <div class="card">
+        <strong><span class="tick">✓</span>生日訂單已確認</strong>
+        <p id="countdown">正在計算派送日子</p>
+        <div class="bar"><i></i></div>
+        <div class="bar-label"><span>身份確認</span><span>愛意驗證</span><span>準備完成</span></div>
+      </div>
+    </div>
+
+    <div class="section-shell">
+      <p class="section-title">ORDER STATUS</p>
+      <h2>今日配送狀態</h2>
+      <div class="status-grid">
+        <article><span class="status-icon">✓</span><div><small>IDENTITY</small><b>芷瑩本人已確認</b></div></article>
+        <article><span class="status-icon">✓</span><div><small>LOVE CHECK</small><b>專屬愛意驗證完成</b></div></article>
+        <article><span class="status-icon">✓</span><div><small>GIFT</small><b>生日鞋履已準備好</b></div></article>
+      </div>
+
+      <div class="birthday-note">
+        <span>FOR TSZYING ONLY</span>
+        <strong>今日份生日服務，只限芷瑩本人簽收 💕</strong>
+      </div>
+
+      <div class="mini-stats">
+        <div><span>RELATIONSHIP</span><b>由 2024 · 12 · 12 開始</b></div>
+        <div><span>TOGETHER</span><b id="days">一路累積的日子</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen story-section us-section" id="us" data-section="us">
+    <div class="section-shell">
+      <div class="top"><span class="mark">♥</span><span>OUR STORY</span><span class="pill">SINCE 2024</span></div>
+      <p class="section-title">US · TOGETHER</p>
+      <h2>我們的時間線</h2>
+      <p class="section-lead">由第一日開始，到今日繼續一齊儲低更多日子。</p>
+
+      <div class="story-timeline">
+        <article>
+          <span class="story-date">2024 · 12 · 12</span>
+          <div><small>START</small><h3>開始拍拖 ❤️</h3><p>呢一日成為我哋故事嘅起點。</p></div>
+        </article>
+        <article>
+          <span class="story-date">一路以來</span>
+          <div><small>TOGETHER</small><h3>一齊儲回憶</h3><p>食飯、出街、旅行、影相，慢慢將普通日子變成我哋嘅記憶。</p></div>
+        </article>
+        <article>
+          <span class="story-date">2026 · 10 · 04</span>
+          <div><small>TODAY</small><h3>芷瑩生日 🎂</h3><p>今日份 Sunny Birthday Delivery，正式送到。</p></div>
+        </article>
+      </div>
+
+      <blockquote class="relationship-quote">「由 12 月 12 日開始，到今日都仲係想繼續同你儲更多日子。」</blockquote>
+    </div>
+  </section>
+
+  <section class="screen story-section memory" id="memory" data-section="memory">
+    <div class="section-shell">
+      <div class="top"><span class="mark">♥</span><span>MEMORY FILES</span><span class="pill">2026</span></div>
+      <p class="section-title">OUR MEMORY FILES</p>
+      <h2>今年的回憶已入庫</h2>
+      <p class="section-lead">有啲相睇返先發現，原來我哋已經儲咗咁多回憶。</p>
+      <div class="memory-grid">
+        <figure class="photo"><img src="images/memory-01.webp" alt="Tszying 的生日回憶海報一"><figcaption><span class="file">FILE 01</span>第一張記憶海報 · 已存檔</figcaption></figure>
+        <figure class="photo"><img src="images/memory-02.webp" alt="Tszying 的生日回憶海報二"><figcaption><span class="file">FILE 02</span>第二張記憶海報 · 已存檔</figcaption></figure>
+        <figure class="photo"><img src="images/memory-03.webp" alt="Tszying 的生日回憶海報三"><figcaption><span class="file">FILE 03</span>第三張記憶海報 · 已存檔</figcaption></figure>
+        <figure class="photo"><img src="images/memory-04.webp" alt="Tszying 的生日回憶海報四"><figcaption><span class="file">FILE 04</span>第四張記憶海報 · 已存檔</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen story-section gift" id="gift" data-section="gift">
+    <div class="section-shell">
+      <div class="top"><span class="mark">♥</span><span>SPECIAL DELIVERY</span><span class="pill" id="giftPill">READY</span></div>
+      <p class="section-title">FINAL DELIVERY</p>
+      <h2 id="giftTitle">最後一站<br>收下你的生日禮物</h2>
+      <p id="giftCopy">兩個專屬口令、12 個「愛你」同 24 下心心都完成咗。呢份生日配送正式屬於你。</p>
+
+      <div class="gift-package">
+        <span class="gift-symbol">♢</span>
+        <small>FOR TSZYING</small>
+        <strong>STATUS · READY</strong>
+        <p>本來唔想直接話你知係咩，不過你都已經嚟到呢度啦 😏</p>
+      </div>
+
+      <details class="gift-reveal">
+        <summary>查看你的生日禮物</summary>
+        <div class="gift-reveal-content">
+          <span class="shoe-icon">👟</span>
+          <small>SPECIAL BIRTHDAY DELIVERY</small>
+          <h3>生日鞋履</h3>
+          <p>已入手 · 已準備好 · 等你簽收 💚</p>
+        </div>
+      </details>
+
+      <p class="ending-note">你的外賣專員 Sunny · 2026.10.04</p>
+    </div>
+  </section>
+
+  <nav class="bottom" aria-label="網站導覽">
+    <button class="active" data-go="home"><i>⌂</i>訂單</button>
+    <button data-go="us"><i>⌁</i>我們</button>
+    <button data-go="memory"><i>▧</i>回憶</button>
+    <button data-go="gift"><i>♢</i>禮物</button>
+  </nav>
 </div><script src="guess-log.js?v=1"></script><script src="entry-flow.js?v=7"></script></body></html>
