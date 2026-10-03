@@ -82,6 +82,73 @@
       .story-timeline article{grid-template-columns:1fr;gap:6px;padding-left:28px}
     }
 
+  
+    /* v8 mobile + native anchor navigation */
+    .app{width:100%;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+    .story-section{scroll-margin-top:8px}
+    .bottom{
+      z-index:50;
+      gap:2px;
+      bottom:0;
+      padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+      -webkit-backdrop-filter:blur(12px);
+      backdrop-filter:blur(12px)
+    }
+    .bottom a{
+      display:grid;
+      flex:1 1 25%;
+      min-width:0;
+      min-height:52px;
+      place-items:center;
+      align-content:center;
+      gap:2px;
+      border:0;
+      border-radius:10px;
+      background:transparent;
+      color:#7e9083;
+      text-decoration:none;
+      font-size:10px;
+      line-height:1.15;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      user-select:none
+    }
+    .bottom a i{font-style:normal;font-size:19px;line-height:1}
+    .bottom a span{display:block;white-space:nowrap}
+    .bottom a.active{color:var(--green);font-weight:850}
+    .bottom a.active i{color:#a68048}
+    .bottom a:focus-visible{outline:3px solid rgba(189,149,96,.55);outline-offset:-3px}
+    @media(max-width:680px){
+      html,body{width:100%;max-width:100%;overflow-x:hidden}
+      body{padding:0}
+      .app{max-width:none;margin:0;border-radius:0;box-shadow:none}
+      .hero{min-height:auto;margin:0;padding:22px 18px 26px;border-radius:0 0 26px 26px}
+      .section-shell{padding:30px 18px 42px}
+      .top{gap:8px;font-size:9px;letter-spacing:.08em}
+      .top>span:nth-child(2){min-width:0;text-align:center}
+      .pill{flex:0 0 auto;white-space:nowrap}
+      h1{font-size:clamp(39px,12vw,49px)}
+      h2{font-size:clamp(27px,8vw,32px)}
+      .recipient{gap:12px;padding:13px}
+      .recipient b{font-size:13px}
+      .card{padding:15px}
+      .status-grid article{min-height:64px}
+      .birthday-note{padding:17px}
+      .memory-grid{grid-template-columns:1fr}
+      .photo img{width:100%;height:auto}
+      .gift-package{padding:22px 16px}
+      .gift-reveal summary{min-height:48px;display:grid;place-items:center}
+      .bottom{width:100%;left:0;transform:none;border-radius:0}
+    }
+    @media(max-width:360px){
+      .hero,.section-shell{padding-left:14px;padding-right:14px}
+      .top{font-size:8px}
+      .pill{padding:5px 7px;font-size:7px}
+      .bottom a{font-size:9px}
+      .bottom a i{font-size:18px}
+      .recipient{display:grid;grid-template-columns:1fr 1fr}
+    }
+
   </style>
 </head>
 <body class="locked"><div class="entry-gate" id="entryGate" role="dialog" aria-modal="true" aria-label="生日配送私人入口"><div class="entry-card" id="entryCard"><div class="entry-poster"><img id="entryPoster" src="images/memory-01.webp" alt="生日回憶海報"></div><p class="eyebrow" id="entryStage">FIRST CHECK · 01 / 02</p><h2 id="entryTitle">先核對第一個<br>美好暗號</h2><p id="entryCopy">提示：通行證持有人只有一位 💕</p><div class="entry-order"><span>DELIVERY FILE</span><b>20261004</b></div><form id="entryForm"><label for="entryPass" id="entryLabel">第一個入口口令</label><input id="entryPass" autocomplete="off" placeholder="輸入口令" aria-describedby="entryError entryLogNote" maxlength="200" autofocus><button type="submit" id="entryButton">進入下一頁</button><p class="entry-error" id="entryError" aria-live="polite"></p></form><p class="entry-note" id="entryLogNote">暗號嘗試會由 Sunny 保存，留作生日回憶 💕。</p><p class="entry-note">SUNNY DELIVERY SERVICE · PRIVATE EDITION</p></div><section class="entry-game" id="loveChase" aria-labelledby="chaseTitle" hidden><div class="entry-game-inner"><p class="eyebrow">LOVE CHECK · 01.5 / 02</p><h2 id="chaseTitle">捉住 12 個「愛你」</h2><p class="entry-game-copy">捉到第 5 個之後會出現假「愛你」；撳錯會退後一格。真嗰個後段會縮細兼發光 💕</p><div class="game-progress"><strong><span id="chaseCount">已捉到 0 / 12</span><span>LOVE HUNT</span></strong><div class="game-progress-track"><i id="chaseBar"></i></div></div><div class="love-playfield"><button class="love-target" id="loveTarget" type="button" aria-describedby="chaseCount">愛你</button></div><p class="entry-game-status" aria-live="polite" id="chaseLive"></p></div></section><section class="entry-game heart-challenge" id="heartChallenge" aria-labelledby="heartTitle" hidden><div class="entry-game-inner"><p class="eyebrow">FINAL LOVE CHECK</p><h2 id="heartTitle">撳爆呢顆心</h2><p class="entry-game-copy">撳 24 下。過一半之後心心會開始走位，最後幾下仲會縮細 💕</p><div class="game-progress"><strong><span id="heartCount">0 / 24</span><span>HEART POWER</span></strong><div class="game-progress-track"><i id="heartBar"></i></div></div><div class="heart-stage"><button class="heart-button" id="heartButton" type="button" aria-describedby="heartCount" aria-label="撳大心心"><span aria-hidden="true">♥</span></button><span class="heart-instruction">每撳一下，心意再大一點</span></div></div></section><section class="entry-game love-finale" id="loveFinale" aria-labelledby="finaleTitle" hidden><div class="finale-stage" id="finaleWords" aria-hidden="true"></div><div class="finale-copy"><p class="eyebrow">SPECIAL DELIVERY COMPLETE</p><h2 id="finaleTitle">美「臀」愛意<br>已送達</h2><p>愛你、愛你、愛你——全部都係畀你。</p><button class="finale-skip" id="skipFinale" type="button">立即收下</button></div></section></div><div class="app">
@@ -194,9 +261,9 @@
   </section>
 
   <nav class="bottom" aria-label="網站導覽">
-    <button class="active" data-go="home"><i>⌂</i>訂單</button>
-    <button data-go="us"><i>⌁</i>我們</button>
-    <button data-go="memory"><i>▧</i>回憶</button>
-    <button data-go="gift"><i>♢</i>禮物</button>
+    <a class="active" href="#home" data-go="home"><i>⌂</i><span>訂單</span></a>
+    <a href="#us" data-go="us"><i>⌁</i><span>我們</span></a>
+    <a href="#memory" data-go="memory"><i>▧</i><span>回憶</span></a>
+    <a href="#gift" data-go="gift"><i>♢</i><span>禮物</span></a>
   </nav>
-</div><script src="guess-log.js?v=1"></script><script src="entry-flow.js?v=7"></script></body></html>
+</div><script src="guess-log.js?v=1"></script><script src="entry-flow.js?v=8"></script></body></html>
