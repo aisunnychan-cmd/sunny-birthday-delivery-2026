@@ -207,9 +207,14 @@
     elements.pass.blur();
   }
 
+  function setActiveNav(sectionId) {
+    document.querySelectorAll('[data-go]').forEach(button => {
+      button.classList.toggle('active', button.dataset.go === sectionId);
+    });
+  }
+
   function showHome() {
-    document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === 'home'));
-    document.querySelectorAll('[data-go]').forEach(button => button.classList.toggle('active', button.dataset.go === 'home'));
+    setActiveNav('home');
     window.scrollTo({top: 0, behavior: 'instant'});
   }
 
@@ -507,11 +512,22 @@
 
   document.querySelectorAll('[data-go]').forEach(button => {
     button.addEventListener('click', () => {
-      document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === button.dataset.go));
-      document.querySelectorAll('[data-go]').forEach(item => item.classList.toggle('active', item === button));
-      window.scrollTo({top: 0, behavior: 'smooth'});
+      const target = document.getElementById(button.dataset.go);
+      if (!target) return;
+      setActiveNav(button.dataset.go);
+      target.scrollIntoView({behavior: 'smooth', block: 'start'});
     });
   });
+
+  if ('IntersectionObserver' in window) {
+    const sectionObserver = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveNav(visible.target.id);
+    }, {rootMargin: '-25% 0px -55% 0px', threshold: [0.05, 0.2, 0.5]});
+    document.querySelectorAll('[data-section]').forEach(section => sectionObserver.observe(section));
+  }
 
   resetVersion();
   if (sessionStorage.getItem(stateKeys.complete) === 'yes') {
