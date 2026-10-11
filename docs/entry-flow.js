@@ -105,6 +105,7 @@
     finale: document.querySelector('#loveFinale'),
     finaleWords: document.querySelector('#finaleWords'),
     skip: document.querySelector('#skipFinale'),
+    back: document.querySelector('#entryBack'),
     quick: document.querySelector('#birthdayQuick'),
     bottom: document.querySelector('.bottom'),
     birthdaySections: [
@@ -243,6 +244,16 @@
     setBirthdayContentVisible(true);
     setActiveNav('home');
     requestAnimationFrame(() => document.querySelector('#home').scrollIntoView({behavior: 'smooth'}));
+  }
+
+  function returnToLobby() {
+    clearTimeout(finaleTimer);
+    sessionStorage.removeItem(stateKeys.active);
+    sessionStorage.removeItem(stateKeys.step);
+    sessionStorage.removeItem(stateKeys.chase);
+    sessionStorage.removeItem(stateKeys.heart);
+    enterService(false);
+    showPortal();
   }
 
   function startBirthdayExperience() {
@@ -566,6 +577,7 @@
   elements.chaseTarget.addEventListener('click', catchLove);
   elements.heartButton.addEventListener('click', pressHeart);
   elements.skip.addEventListener('click', finishFinale);
+  elements.back.addEventListener('click', returnToLobby);
   elements.quick.addEventListener('click', openBirthdayArchive);
   document.querySelector('#birthdayReplay').addEventListener('click', startBirthdayExperience);
 
