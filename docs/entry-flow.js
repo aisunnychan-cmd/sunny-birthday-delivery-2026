@@ -56,13 +56,27 @@
   }
   if (typeof document === 'undefined') return;
 
+  const DAY = 86400000;
   const birthday = new Date('2026-10-04T00:00:00+08:00');
+  const relationshipStart = new Date('2024-12-12T00:00:00+08:00');
+  const anniversary = new Date('2026-12-12T00:00:00+08:00');
   const now = new Date();
-  const difference = birthday - now;
-  document.querySelector('#countdown').textContent = difference <= 0
-    ? '今日正式配送中'
-    : `距離派送還有 ${Math.ceil(difference / 86400000)} 日`;
-  document.querySelector('#days').textContent = `已累積 ${Math.max(0, Math.floor((now - new Date('2024-12-12T00:00:00+08:00')) / 86400000))} 日`;
+  const birthdayDifference = birthday - now;
+  const daysTogether = Math.max(0, Math.floor((now - relationshipStart) / DAY));
+  const anniversaryDifference = anniversary - now;
+  document.querySelector('#countdown').textContent = birthdayDifference > 0
+    ? `距離派送還有 ${Math.ceil(birthdayDifference / DAY)} 日`
+    : birthdayDifference > -DAY
+      ? '今日生日配送完成 · 回憶已存檔'
+      : `生日配送已完成 ${Math.floor((now - birthday) / DAY)} 日 · 回憶已存檔`;
+  document.querySelector('#days').textContent = `已累積 ${daysTogether} 日`;
+  document.querySelector('#portalDays').textContent = `DAY ${daysTogether}`;
+  document.querySelector('#togetherDays').textContent = `${daysTogether} 日`;
+  document.querySelector('#anniversaryCountdown').textContent = anniversaryDifference > 0
+    ? `仲有 ${Math.ceil(anniversaryDifference / DAY)} 日`
+    : anniversaryDifference > -DAY
+      ? '今日就係兩周年 💕'
+      : '兩周年已到達';
 
   const elements = {
     gate: document.querySelector('#entryGate'),
@@ -198,9 +212,9 @@
     elements.pass.blur();
   }
 
-  function showHome() {
-    document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === 'home'));
-    document.querySelectorAll('[data-go]').forEach(button => button.classList.toggle('active', button.dataset.go === 'home'));
+  function showPortal() {
+    document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === 'portal'));
+    document.querySelectorAll('.bottom [data-go]').forEach(button => button.classList.toggle('active', button.dataset.go === 'portal'));
     window.scrollTo({top: 0, behavior: 'instant'});
   }
 
@@ -420,7 +434,7 @@
   function finishFinale() {
     sessionStorage.setItem(stateKeys.complete, 'yes');
     sessionStorage.setItem(stateKeys.step, 'complete');
-    showHome();
+    showPortal();
     enterService();
   }
 
@@ -479,15 +493,17 @@
 
   document.querySelectorAll('[data-go]').forEach(button => {
     button.addEventListener('click', () => {
-      document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === button.dataset.go));
-      document.querySelectorAll('[data-go]').forEach(item => item.classList.toggle('active', item === button));
+      const target = button.dataset.go;
+      const navigationTarget = target === 'route' ? 'home' : target;
+      document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === target));
+      document.querySelectorAll('.bottom [data-go]').forEach(item => item.classList.toggle('active', item.dataset.go === navigationTarget));
       window.scrollTo({top: 0, behavior: 'smooth'});
     });
   });
 
   resetVersion();
   if (sessionStorage.getItem(stateKeys.complete) === 'yes') {
-    showHome();
+    showPortal();
     enterService();
   } else {
     const step = sessionStorage.getItem(stateKeys.step) || 'first';
