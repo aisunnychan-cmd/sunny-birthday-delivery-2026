@@ -112,7 +112,8 @@
     step: 'sunny-access-step-v7',
     chase: 'sunny-love-chase-v7',
     heart: 'sunny-heart-count-v7',
-    complete: 'sunny-entry-ok'
+    complete: 'sunny-entry-ok',
+    active: 'sunny-birthday-active-v1'
   };
   let accessStage = 1;
   let chaseLocked = false;
@@ -184,8 +185,6 @@
   }
 
   buildProgressiveEffects();
-  elements.app.setAttribute('aria-hidden', 'true');
-  elements.app.inert = true;
 
   function readCount(key, maximum) {
     const value = Number.parseInt(sessionStorage.getItem(key) || '0', 10);
@@ -216,9 +215,28 @@
     elements.app.removeAttribute('aria-hidden');
     elements.app.inert = false;
     elements.gate.setAttribute('aria-hidden', 'true');
-    elements.gate.classList.add('hide');
-    document.body.classList.remove('locked');
+    elements.gate.classList.remove('active');
+    elements.gate.hidden = true;
+    document.body.classList.remove('locked', 'modal-open');
+    sessionStorage.removeItem(stateKeys.active);
     elements.pass.blur();
+  }
+
+  function startBirthdayExperience() {
+    clearTimeout(finaleTimer);
+    sessionStorage.setItem(stateKeys.active, 'yes');
+    sessionStorage.setItem(stateKeys.step, 'first');
+    sessionStorage.setItem(stateKeys.chase, '0');
+    sessionStorage.setItem(stateKeys.heart, '0');
+    sessionStorage.removeItem(stateKeys.complete);
+    elements.gate.hidden = false;
+    elements.gate.removeAttribute('aria-hidden');
+    elements.gate.classList.remove('hide');
+    elements.gate.classList.add('active');
+    elements.app.setAttribute('aria-hidden', 'true');
+    elements.app.inert = true;
+    document.body.classList.add('locked', 'modal-open');
+    showFirstCheck();
   }
 
   function setActiveNav(sectionId) {
@@ -467,8 +485,9 @@
   function finishFinale() {
     sessionStorage.setItem(stateKeys.complete, 'yes');
     sessionStorage.setItem(stateKeys.step, 'complete');
-    showPortal();
     enterService();
+    setActiveNav('home');
+    requestAnimationFrame(() => document.querySelector('#home').scrollIntoView({behavior: 'smooth'}));
   }
 
   function showFinale() {
@@ -523,6 +542,7 @@
   elements.chaseTarget.addEventListener('click', catchLove);
   elements.heartButton.addEventListener('click', pressHeart);
   elements.skip.addEventListener('click', finishFinale);
+  document.querySelector('#birthdayReplay').addEventListener('click', startBirthdayExperience);
 
   const navLinks = [...document.querySelectorAll('[data-go]')];
   const storySections = [...document.querySelectorAll('[data-section]')];
@@ -540,6 +560,7 @@
     const marker = window.scrollY + Math.min(window.innerHeight * 0.38, 260);
     let current = storySections[0];
     storySections.forEach(section => {
+      if (section.hidden) return;
       if (section.offsetTop <= marker) current = section;
     });
     setActiveNav(current.id);
@@ -554,15 +575,21 @@
   updateNavFromScroll();
 
   resetVersion();
-  if (sessionStorage.getItem(stateKeys.complete) === 'yes') {
-    showPortal();
-    enterService();
-  } else {
+  if (sessionStorage.getItem(stateKeys.active) === 'yes') {
+    elements.gate.hidden = false;
+    elements.gate.classList.add('active');
+    elements.gate.removeAttribute('aria-hidden');
+    elements.app.setAttribute('aria-hidden', 'true');
+    elements.app.inert = true;
+    document.body.classList.add('locked', 'modal-open');
     const step = sessionStorage.getItem(stateKeys.step) || 'first';
     if (step === 'chase') showLoveChase();
     else if (step === 'second') showSecondCheck();
     else if (step === 'heart') showHeartChallenge();
     else if (step === 'finale') showFinale();
     else showFirstCheck();
+  } else {
+    showPortal();
+    enterService();
   }
 })();

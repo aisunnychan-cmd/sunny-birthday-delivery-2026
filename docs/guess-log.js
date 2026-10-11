@@ -17,7 +17,7 @@
     const frame = document.createElement('iframe');
     frame.hidden = true;
     frame.name = 'guess-' + nonce;
-    frame.title = '生日暗號記錄';
+    frame.title = '私人暗號記錄';
     const form = document.createElement('form');
     form.hidden = true;
     form.method = 'POST';
@@ -35,8 +35,8 @@
       frame.remove(); form.remove(); active = false;
       if (ok) {
         queue.shift(); save();
-        const note = document.querySelector('#entryLogNote');
-        if (note) note.textContent = queue.length ? '正在留低你的暗號嘗試 💕。' : '暗號嘗試已由 Sunny 保存，留作生日回憶 💕。';
+        const note = document.querySelector(item.noteSelector || '#entryLogNote');
+        if (note) note.textContent = queue.length ? '正在留低你的暗號嘗試 💕。' : '暗號嘗試已由 Sunny 保存，留作私人回憶 💕。';
         flush();
       }
       else {
@@ -55,13 +55,18 @@
     timer = setTimeout(() => finish(false), 20000);
     form.submit();
   }
+  function enqueue({experience, stage, guess, noteSelector}) {
+    queue.push({id:crypto.randomUUID(),session,experience,stage,guess,noteSelector});
+    const note = document.querySelector(noteSelector || '#entryLogNote');
+    if (note) note.textContent = '正在留低你的暗號嘗試 💕。';
+    save(); flush();
+  }
   document.querySelector('#entryForm').addEventListener('submit', () => {
     const guess = document.querySelector('#entryPass').value;
     const stage = document.querySelector('#entryStage').textContent.includes('SECOND') ? 2 : 1;
-    queue.push({id:crypto.randomUUID(),session,stage,guess});
-    document.querySelector('#entryLogNote').textContent = '正在留低你的暗號嘗試 💕。';
-    save(); flush();
+    enqueue({experience:'birthday',stage,guess,noteSelector:'#entryLogNote'});
   }, true);
+  window.addEventListener('sunny:guess-attempt', event => enqueue(event.detail || {}));
   window.addEventListener('online', flush);
   flush();
 })();
