@@ -1,5 +1,5 @@
 (() => {
-  const ACCESS_VERSION = 'two-stage-love-games-v6';
+  const ACCESS_VERSION = 'two-stage-love-games-v7';
   const FIRST_PASSWORD = '只准芷瑩入場';
   const SECOND_PASSWORD = '因為我❤️你';
   const CHASE_TOTAL = 12;
@@ -109,9 +109,9 @@
 
   const stateKeys = {
     version: 'sunny-access-version',
-    step: 'sunny-access-step-v6',
-    chase: 'sunny-love-chase-v6',
-    heart: 'sunny-heart-count-v6',
+    step: 'sunny-access-step-v7',
+    chase: 'sunny-love-chase-v7',
+    heart: 'sunny-heart-count-v7',
     complete: 'sunny-entry-ok'
   };
   let accessStage = 1;
@@ -126,7 +126,16 @@
   const decoyPositions = [
     [[68, 28], [38, 72]],
     [[20, 28], [76, 72]],
-    [[72, 42], [18, 78]]
+    [[72, 42], [18, 78]],
+    [[22, 30], [72, 68], [46, 82]],
+    [[75, 26], [24, 55], [66, 80]],
+    [[18, 36], [78, 48], [38, 76]],
+    [[70, 24], [22, 66], [72, 78]]
+  ];
+  const heartOffsets = [
+    [-0.78, -0.55], [0.72, -0.45], [-0.62, 0.48], [0.74, 0.56],
+    [0.00, -0.72], [-0.82, 0.06], [0.82, 0.12], [0.18, 0.72],
+    [-0.55, -0.28], [0.58, -0.08], [-0.30, 0.58], [0.66, 0.44]
   ];
   const chaseFeedback = [
     '第一個捉到啦 💕', '好快手喎', '愛你又走咗去第二邊', '熱身完成',
@@ -212,9 +221,14 @@
     elements.pass.blur();
   }
 
-  function showPortal() {
-    document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === 'portal'));
-    document.querySelectorAll('.bottom [data-go]').forEach(button => button.classList.toggle('active', button.dataset.go === 'portal'));
+  function setActiveNav(sectionId) {
+    document.querySelectorAll('[data-go]').forEach(button => {
+      button.classList.toggle('active', button.dataset.go === sectionId);
+    });
+  }
+
+  function showHome() {
+    setActiveNav('home');
     window.scrollTo({top: 0, behavior: 'instant'});
   }
 
@@ -256,17 +270,17 @@
     elements.chaseTarget.style.top = `${top}%`;
     elements.chaseTarget.style.setProperty('--target-rotate', `${((count % 5) - 2) * 6}deg`);
     elements.chaseTarget.classList.toggle('playful', count >= 4 && count < 8);
-    elements.chaseTarget.classList.toggle('glowing', count >= 8 && count < 11);
-    elements.chaseTarget.classList.toggle('final-target', count === 11);
+    elements.chaseTarget.classList.toggle('glowing', count >= 8 && count < CHASE_TOTAL);
+    elements.chaseTarget.classList.toggle('final-target', count >= 9);
     elements.chaseMessage.textContent = count === 0
       ? '先捉住第一個「愛你」'
-      : count < 4
+      : count < 5
         ? '愛你留下咗一條心心軌跡'
         : count < 8
-          ? '佢開始識得轉身走避啦'
+          ? '小心！假「愛你」開始出現，撳錯會退後一格'
           : count < 11
-            ? '小心煙幕：撳會發光嗰個'
-            : '最後一個縮細咗，捉實佢！';
+            ? '煙幕升級：真嗰個會輕輕發光'
+            : '最後一個縮細咗：捉實會發光嗰個！';
     renderDecoys(count);
   }
 
@@ -320,22 +334,30 @@
 
   function renderDecoys(count) {
     clearDecoys();
-    if (count < 8 || count > 10) return;
-    decoyPositions[count - 8].forEach(([left, top], index) => {
+    if (count < 5 || count > 11) return;
+    decoyPositions[count - 5].forEach(([left, top], index) => {
       const decoy = document.createElement('button');
       decoy.type = 'button';
       decoy.className = 'love-target love-decoy';
+      if (count >= 8) decoy.classList.add('hard-decoy');
       decoy.textContent = '愛你';
       decoy.style.left = `${left}%`;
       decoy.style.top = `${top}%`;
-      decoy.style.setProperty('--target-rotate', `${index ? 8 : -8}deg`);
+      decoy.style.setProperty('--target-rotate', `${index % 2 ? 7 : -7}deg`);
       decoy.addEventListener('click', () => {
+        decoy.disabled = true;
         decoy.classList.remove('wrong');
         void decoy.offsetWidth;
         decoy.classList.add('wrong');
-        elements.chaseMessage.textContent = '呢個係煙幕，再搵下會發光嗰個 💕';
-        elements.chaseLive.textContent = '撳中煙幕，請尋找發光的愛你';
-        haptic(15);
+        const current = readCount(stateKeys.chase, CHASE_TOTAL);
+        const penalty = Math.max(0, current - 1);
+        sessionStorage.setItem(stateKeys.chase, String(penalty));
+        elements.chaseCount.textContent = `已捉到 ${penalty} / ${CHASE_TOTAL}`;
+        elements.chaseBar.style.width = `${(penalty / CHASE_TOTAL) * 100}%`;
+        elements.chaseMessage.textContent = '撳錯咗 💔 退後一格，再搵會發光嗰個';
+        elements.chaseLive.textContent = `撳中煙幕，退後到 ${penalty} 個愛你`;
+        haptic([20, 30, 20]);
+        setTimeout(updateChase, 320);
       });
       elements.chasePlayfield.append(decoy);
     });
@@ -383,6 +405,17 @@
     elements.heartButton.style.setProperty('--heart-scale', String(1 + ratio * 0.18));
     elements.heartButton.style.setProperty('--heart-progress', `${ratio * 360}deg`);
     elements.heartButton.style.setProperty('--heart-clip', `${100 - ratio * 100}%`);
+    if (count >= 12 && count < HEART_TOTAL) {
+      const [xRatio, yRatio] = heartOffsets[(count - 12) % heartOffsets.length];
+      const maxX = Math.max(36, (elements.heartStage.clientWidth - elements.heartButton.offsetWidth) / 2 - 18);
+      const maxY = Math.max(24, (elements.heartStage.clientHeight - elements.heartButton.offsetHeight) / 2 - 58);
+      elements.heartButton.style.setProperty('--heart-x', `${Math.round(maxX * xRatio)}px`);
+      elements.heartButton.style.setProperty('--heart-y', `${Math.round(maxY * yRatio)}px`);
+      elements.heartButton.style.setProperty('--heart-scale', count >= 18 ? '0.76' : '0.90');
+    } else {
+      elements.heartButton.style.setProperty('--heart-x', '0px');
+      elements.heartButton.style.setProperty('--heart-y', '0px');
+    }
     elements.heart.classList.remove('phase-1', 'phase-2', 'phase-3', 'phase-4', 'urgent');
     elements.heart.classList.add(`phase-${phase}`);
     if (count >= 18 && count < HEART_TOTAL) elements.heart.classList.add('urgent');
@@ -491,15 +524,34 @@
   elements.heartButton.addEventListener('click', pressHeart);
   elements.skip.addEventListener('click', finishFinale);
 
-  document.querySelectorAll('[data-go]').forEach(button => {
-    button.addEventListener('click', () => {
-      const target = button.dataset.go;
-      const navigationTarget = target === 'route' ? 'home' : target;
-      document.querySelectorAll('.screen').forEach(screen => screen.classList.toggle('active', screen.id === target));
-      document.querySelectorAll('.bottom [data-go]').forEach(item => item.classList.toggle('active', item.dataset.go === navigationTarget));
-      window.scrollTo({top: 0, behavior: 'smooth'});
+  const navLinks = [...document.querySelectorAll('[data-go]')];
+  const storySections = [...document.querySelectorAll('[data-section]')];
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      setActiveNav(link.dataset.go);
     });
   });
+
+  let navTicking = false;
+  function updateNavFromScroll() {
+    navTicking = false;
+    if (!storySections.length) return;
+    const marker = window.scrollY + Math.min(window.innerHeight * 0.38, 260);
+    let current = storySections[0];
+    storySections.forEach(section => {
+      if (section.offsetTop <= marker) current = section;
+    });
+    setActiveNav(current.id);
+  }
+
+  window.addEventListener('scroll', () => {
+    if (navTicking) return;
+    navTicking = true;
+    requestAnimationFrame(updateNavFromScroll);
+  }, {passive:true});
+  window.addEventListener('resize', updateNavFromScroll);
+  updateNavFromScroll();
 
   resetVersion();
   if (sessionStorage.getItem(stateKeys.complete) === 'yes') {
