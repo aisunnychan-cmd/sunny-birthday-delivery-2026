@@ -104,7 +104,14 @@
     heartStage: document.querySelector('.heart-stage'),
     finale: document.querySelector('#loveFinale'),
     finaleWords: document.querySelector('#finaleWords'),
-    skip: document.querySelector('#skipFinale')
+    skip: document.querySelector('#skipFinale'),
+    quick: document.querySelector('#birthdayQuick'),
+    bottom: document.querySelector('.bottom'),
+    birthdaySections: [
+      document.querySelector('#home'),
+      document.querySelector('#memory'),
+      document.querySelector('#gift')
+    ]
   };
 
   const stateKeys = {
@@ -210,7 +217,16 @@
     panel.hidden = false;
   }
 
-  function enterService() {
+  function setBirthdayContentVisible(visible) {
+    [...elements.birthdaySections, elements.bottom].forEach(node => {
+      node.hidden = !visible;
+      node.inert = !visible;
+      if (visible) node.removeAttribute('aria-hidden');
+      else node.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  function enterService(revealBirthday = true) {
     clearTimeout(finaleTimer);
     elements.app.removeAttribute('aria-hidden');
     elements.app.inert = false;
@@ -219,11 +235,19 @@
     elements.gate.hidden = true;
     document.body.classList.remove('locked', 'modal-open');
     sessionStorage.removeItem(stateKeys.active);
+    setBirthdayContentVisible(revealBirthday);
     elements.pass.blur();
+  }
+
+  function openBirthdayArchive() {
+    setBirthdayContentVisible(true);
+    setActiveNav('home');
+    requestAnimationFrame(() => document.querySelector('#home').scrollIntoView({behavior: 'smooth'}));
   }
 
   function startBirthdayExperience() {
     clearTimeout(finaleTimer);
+    setBirthdayContentVisible(false);
     sessionStorage.setItem(stateKeys.active, 'yes');
     sessionStorage.setItem(stateKeys.step, 'first');
     sessionStorage.setItem(stateKeys.chase, '0');
@@ -542,6 +566,7 @@
   elements.chaseTarget.addEventListener('click', catchLove);
   elements.heartButton.addEventListener('click', pressHeart);
   elements.skip.addEventListener('click', finishFinale);
+  elements.quick.addEventListener('click', openBirthdayArchive);
   document.querySelector('#birthdayReplay').addEventListener('click', startBirthdayExperience);
 
   const navLinks = [...document.querySelectorAll('[data-go]')];
@@ -576,6 +601,7 @@
 
   resetVersion();
   if (sessionStorage.getItem(stateKeys.active) === 'yes') {
+    setBirthdayContentVisible(false);
     elements.gate.hidden = false;
     elements.gate.classList.add('active');
     elements.gate.removeAttribute('aria-hidden');
@@ -590,6 +616,6 @@
     else showFirstCheck();
   } else {
     showPortal();
-    enterService();
+    enterService(false);
   }
 })();

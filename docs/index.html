@@ -204,13 +204,13 @@
       <p class="section-title">CHOOSE A MEMORY</p>
       <h2>今次想去邊一站？</h2>
       <div class="station-grid">
-        <article class="station-card birthday-station"><small>ARCHIVE · 2026.10.04</small><strong>生日配送站</strong><p>可以直接重溫，亦可以由兩層密碼開始完整玩多次。</p><div class="station-actions"><a href="#home">快速進入</a><button type="button" id="birthdayReplay">完整重玩</button></div></article>
+        <article class="station-card birthday-station"><small>ARCHIVE · 2026.10.04</small><strong>生日配送站</strong><p>可以直接重溫，亦可以由兩層密碼開始完整玩多次。</p><div class="station-actions"><button type="button" id="birthdayQuick">快速進入</button><button type="button" id="birthdayReplay">完整重玩</button></div></article>
         <button class="station-card anniversary-station" id="anniversaryEnter" type="button"><small>LOCKED · 2026.12.12</small><strong>兩周年紀念日</strong><p>兩層新密碼、12點星光路線，同埋24個月愛情尾班車。</p></button>
       </div>
       <p class="portal-note">呢個私人站會繼續更新；已發生嘅回憶會保存，未發生嘅安排唔會預先亂寫。</p>
     </div>
   </section>
-  <section class="screen story-section order-section" id="home" data-section="home">
+  <section class="screen story-section order-section" id="home" data-section="home" hidden>
     <div class="hero">
       <div class="top"><span class="mark">♥</span><span>SUNNY DELIVERY SERVICE</span><span class="pill">ARCHIVE 20261004</span></div>
       <p class="eyebrow">SPECIAL BIRTHDAY DELIVERY · COMPLETED</p>
@@ -268,7 +268,7 @@
     </div>
   </section>
 
-  <section class="screen story-section memory" id="memory" data-section="memory">
+  <section class="screen story-section memory" id="memory" data-section="memory" hidden>
     <div class="section-shell">
       <div class="top"><span class="mark">♥</span><span>MEMORY FILES</span><span class="pill">2026</span></div>
       <p class="section-title">OUR MEMORY FILES</p>
@@ -283,7 +283,7 @@
     </div>
   </section>
 
-  <section class="screen story-section gift" id="gift" data-section="gift">
+  <section class="screen story-section gift" id="gift" data-section="gift" hidden>
     <div class="section-shell">
       <div class="top"><span class="mark">♥</span><span>SPECIAL DELIVERY</span><span class="pill" id="giftPill">READY</span></div>
       <p class="section-title">FINAL DELIVERY</p>
@@ -362,11 +362,11 @@
     </div>
   </div>
 
-  <nav class="bottom" aria-label="網站導覽">
+  <nav class="bottom" aria-label="網站導覽" hidden>
     <a class="active" href="#portal" data-go="portal"><i>⌂</i><span>入口</span></a>
     <a href="#home" data-go="home"><i>◌</i><span>生日</span></a>
     <a href="#anniversary" data-go="anniversary" id="anniversaryNav"><i>♡</i><span>紀念日</span></a>
     <a href="#memory" data-go="memory"><i>▧</i><span>回憶</span></a>
     <a href="#gift" data-go="gift"><i>♢</i><span>禮物</span></a>
   </nav>
-</div><script src="guess-log.js?v=2"></script><script src="entry-flow.js?v=10"></script><script src="anniversary-flow.js?v=1"></script></body></html>
+</div><script src="guess-log.js?v=2"></script><script src="entry-flow.js?v=11"></script><script src="anniversary-flow.js?v=1"></script></body></html>
