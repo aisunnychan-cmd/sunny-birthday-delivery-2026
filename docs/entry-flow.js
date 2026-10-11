@@ -227,8 +227,8 @@
     });
   }
 
-  function showHome() {
-    setActiveNav('home');
+  function showPortal() {
+    setActiveNav('portal');
     window.scrollTo({top: 0, behavior: 'instant'});
   }
 

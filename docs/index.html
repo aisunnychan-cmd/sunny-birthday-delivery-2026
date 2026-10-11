@@ -149,30 +149,81 @@
       .recipient{display:grid;grid-template-columns:1fr 1fr}
     }
 
+    /* Private station hub + anniversary chapter */
+    .portal-section{background:linear-gradient(180deg,#edf1e8,#f7f2e7 72%)}
+    .portal-hero{position:relative;overflow:hidden;padding:30px 20px 38px;border-radius:0 0 34px 34px;color:#fffaf0;background:radial-gradient(circle at 87% 12%,rgba(244,218,165,.34) 0 8%,transparent 28%),radial-gradient(circle at 12% 88%,rgba(190,156,192,.25) 0 13%,transparent 34%),linear-gradient(145deg,#143f31,#4e7763)}
+    .portal-hero:after{content:"✦  ·  ✧";position:absolute;right:22px;bottom:22px;color:#f3d99c;font:22px Georgia,serif;letter-spacing:.38em;opacity:.8}
+    .portal-hero h1{max-width:540px;font-size:clamp(42px,12vw,64px)}
+    .portal-hero h1 em{display:block;margin-top:4px;font-size:.68em;letter-spacing:-.03em}
+    .portal-hero .subtitle{max-width:460px;line-height:1.65}
+    .portal-status{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+    .portal-status span{padding:7px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.09);font-size:9px;font-weight:850;letter-spacing:.08em}
+    .station-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+    .station-card{position:relative;overflow:hidden;min-height:215px;padding:22px;border-radius:22px;color:#fffaf0;text-decoration:none;box-shadow:0 14px 32px rgba(23,59,45,.14)}
+    .station-card:after{content:"→";position:absolute;right:20px;bottom:16px;font-size:27px}
+    .station-card small{display:block;margin-bottom:32px;font-size:9px;font-weight:850;letter-spacing:.13em;opacity:.82}
+    .station-card strong{display:block;font:700 29px/1.08 Georgia,"PingFang HK",serif}
+    .station-card p{max-width:85%;margin:9px 0 0;font-size:12px;line-height:1.55;opacity:.82}
+    .station-card.birthday-station{background:radial-gradient(circle at 88% 12%,#6c9a80 0 9%,transparent 31%),linear-gradient(145deg,#173f31,#28664c)}
+    .station-card.anniversary-station{color:#4b2935;background:radial-gradient(circle at 90% 10%,rgba(255,255,255,.55) 0 8%,transparent 29%),linear-gradient(145deg,#edd8cf,#d7b6bd)}
+    .portal-note{margin:18px 2px 0;color:#708375;font-size:11px;line-height:1.65}
+    .anniversary-section{background:linear-gradient(180deg,#f5ebe6,#f7f2e7 55%)}
+    .anniversary-hero{position:relative;overflow:hidden;padding:30px 20px 34px;border-radius:0 0 34px 34px;color:#fff9f1;background:radial-gradient(circle at 85% 12%,rgba(255,234,194,.36) 0 8%,transparent 29%),linear-gradient(145deg,#704755,#aa727d 56%,#c69284)}
+    .anniversary-hero:after{content:"♡";position:absolute;right:18px;bottom:-28px;color:rgba(255,255,255,.13);font:160px/1 Georgia,serif}
+    .anniversary-hero h1{position:relative;z-index:1;font-size:clamp(46px,13vw,68px)}
+    .anniversary-hero h1 em{color:#f6dbab}
+    .anniversary-hero .subtitle{position:relative;z-index:1;color:#f9e9e3;line-height:1.6}
+    .anniversary-stats{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+    .anniversary-stats div{padding:14px;border:1px solid rgba(255,255,255,.25);border-radius:15px;background:rgba(255,255,255,.1)}
+    .anniversary-stats span{display:block;margin-bottom:5px;color:#f4d8cd;font-size:8px;font-weight:850;letter-spacing:.1em}
+    .anniversary-stats b{font-size:15px}
+    .anniversary-section .story-timeline:before{background:#d9b9ba}
+    .anniversary-section .story-timeline article:before{background:#b77680;border-color:#f7f2e7;box-shadow:0 0 0 1px #b77680}
+    .bottom a{flex-basis:20%}
+    @media(max-width:520px){.station-grid{grid-template-columns:1fr}.station-card{min-height:188px}.anniversary-stats{grid-template-columns:1fr 1fr}.bottom a{font-size:9px}.bottom a i{font-size:18px}}
+
   </style>
 </head>
-<body class="locked"><div class="entry-gate" id="entryGate" role="dialog" aria-modal="true" aria-label="生日配送私人入口"><div class="entry-card" id="entryCard"><div class="entry-poster"><img id="entryPoster" src="images/memory-01.webp" alt="生日回憶海報"></div><p class="eyebrow" id="entryStage">FIRST CHECK · 01 / 02</p><h2 id="entryTitle">先核對第一個<br>美好暗號</h2><p id="entryCopy">提示：通行證持有人只有一位 💕</p><div class="entry-order"><span>DELIVERY FILE</span><b>20261004</b></div><form id="entryForm"><label for="entryPass" id="entryLabel">第一個入口口令</label><input id="entryPass" autocomplete="off" placeholder="輸入口令" aria-describedby="entryError entryLogNote" maxlength="200" autofocus><button type="submit" id="entryButton">進入下一頁</button><p class="entry-error" id="entryError" aria-live="polite"></p></form><p class="entry-note" id="entryLogNote">暗號嘗試會由 Sunny 保存，留作生日回憶 💕。</p><p class="entry-note">SUNNY DELIVERY SERVICE · PRIVATE EDITION</p></div><section class="entry-game" id="loveChase" aria-labelledby="chaseTitle" hidden><div class="entry-game-inner"><p class="eyebrow">LOVE CHECK · 01.5 / 02</p><h2 id="chaseTitle">捉住 12 個「愛你」</h2><p class="entry-game-copy">捉到第 5 個之後會出現假「愛你」；撳錯會退後一格。真嗰個後段會縮細兼發光 💕</p><div class="game-progress"><strong><span id="chaseCount">已捉到 0 / 12</span><span>LOVE HUNT</span></strong><div class="game-progress-track"><i id="chaseBar"></i></div></div><div class="love-playfield"><button class="love-target" id="loveTarget" type="button" aria-describedby="chaseCount">愛你</button></div><p class="entry-game-status" aria-live="polite" id="chaseLive"></p></div></section><section class="entry-game heart-challenge" id="heartChallenge" aria-labelledby="heartTitle" hidden><div class="entry-game-inner"><p class="eyebrow">FINAL LOVE CHECK</p><h2 id="heartTitle">撳爆呢顆心</h2><p class="entry-game-copy">撳 24 下。過一半之後心心會開始走位，最後幾下仲會縮細 💕</p><div class="game-progress"><strong><span id="heartCount">0 / 24</span><span>HEART POWER</span></strong><div class="game-progress-track"><i id="heartBar"></i></div></div><div class="heart-stage"><button class="heart-button" id="heartButton" type="button" aria-describedby="heartCount" aria-label="撳大心心"><span aria-hidden="true">♥</span></button><span class="heart-instruction">每撳一下，心意再大一點</span></div></div></section><section class="entry-game love-finale" id="loveFinale" aria-labelledby="finaleTitle" hidden><div class="finale-stage" id="finaleWords" aria-hidden="true"></div><div class="finale-copy"><p class="eyebrow">SPECIAL DELIVERY COMPLETE</p><h2 id="finaleTitle">美「臀」愛意<br>已送達</h2><p>愛你、愛你、愛你——全部都係畀你。</p><button class="finale-skip" id="skipFinale" type="button">立即收下</button></div></section></div><div class="app">
-  <section class="screen active story-section order-section" id="home" data-section="home">
+<body class="locked"><div class="entry-gate" id="entryGate" role="dialog" aria-modal="true" aria-label="私人紀念站入口"><div class="entry-card" id="entryCard"><div class="entry-poster"><img id="entryPoster" src="images/memory-01.webp" alt="生日回憶海報"></div><p class="eyebrow" id="entryStage">FIRST CHECK · 01 / 02</p><h2 id="entryTitle">先核對第一個<br>美好暗號</h2><p id="entryCopy">提示：通行證持有人只有一位 💕</p><div class="entry-order"><span>PRIVATE FILE</span><b>2024—∞</b></div><form id="entryForm"><label for="entryPass" id="entryLabel">第一個入口口令</label><input id="entryPass" autocomplete="off" placeholder="輸入口令" aria-describedby="entryError entryLogNote" maxlength="200" autofocus><button type="submit" id="entryButton">進入下一頁</button><p class="entry-error" id="entryError" aria-live="polite"></p></form><p class="entry-note" id="entryLogNote">暗號嘗試會由 Sunny 保存，留作私人回憶 💕。</p><p class="entry-note">SUNNY × TSZYING · PRIVATE EDITION</p></div><section class="entry-game" id="loveChase" aria-labelledby="chaseTitle" hidden><div class="entry-game-inner"><p class="eyebrow">LOVE CHECK · 01.5 / 02</p><h2 id="chaseTitle">捉住 12 個「愛你」</h2><p class="entry-game-copy">捉到第 5 個之後會出現假「愛你」；撳錯會退後一格。真嗰個後段會縮細兼發光 💕</p><div class="game-progress"><strong><span id="chaseCount">已捉到 0 / 12</span><span>LOVE HUNT</span></strong><div class="game-progress-track"><i id="chaseBar"></i></div></div><div class="love-playfield"><button class="love-target" id="loveTarget" type="button" aria-describedby="chaseCount">愛你</button></div><p class="entry-game-status" aria-live="polite" id="chaseLive"></p></div></section><section class="entry-game heart-challenge" id="heartChallenge" aria-labelledby="heartTitle" hidden><div class="entry-game-inner"><p class="eyebrow">FINAL LOVE CHECK</p><h2 id="heartTitle">撳爆呢顆心</h2><p class="entry-game-copy">撳 24 下。過一半之後心心會開始走位，最後幾下仲會縮細 💕</p><div class="game-progress"><strong><span id="heartCount">0 / 24</span><span>HEART POWER</span></strong><div class="game-progress-track"><i id="heartBar"></i></div></div><div class="heart-stage"><button class="heart-button" id="heartButton" type="button" aria-describedby="heartCount" aria-label="撳大心心"><span aria-hidden="true">♥</span></button><span class="heart-instruction">每撳一下，心意再大一點</span></div></div></section><section class="entry-game love-finale" id="loveFinale" aria-labelledby="finaleTitle" hidden><div class="finale-stage" id="finaleWords" aria-hidden="true"></div><div class="finale-copy"><p class="eyebrow">SPECIAL DELIVERY COMPLETE</p><h2 id="finaleTitle">美「臀」愛意<br>已送達</h2><p>愛你、愛你、愛你——全部都係畀你。</p><button class="finale-skip" id="skipFinale" type="button">立即收下</button></div></section></div><div class="app">
+  <section class="screen active story-section portal-section" id="portal" data-section="portal">
+    <div class="portal-hero">
+      <div class="top"><span class="mark">♥</span><span>SUNNY × TSZYING</span><span class="pill">PRIVATE STATION</span></div>
+      <p class="eyebrow">OUR LITTLE DREAM STATION</p>
+      <h1>兩個人的<br><em>私人發夢站</em></h1>
+      <p class="subtitle">生日過後，故事仲未完。由今日開始，呢度會繼續收藏我哋值得記住嘅日子。</p>
+      <div class="portal-status"><span>TOGETHER SINCE 2024</span><span id="portalDays">正在整理日數</span></div>
+    </div>
+    <div class="section-shell">
+      <p class="section-title">CHOOSE A MEMORY</p>
+      <h2>今次想去邊一站？</h2>
+      <div class="station-grid">
+        <a class="station-card birthday-station" href="#home"><small>ARCHIVE · 2026.10.04</small><strong>生日配送站</strong><p>重溫今年生日嘅故事、海報同心意。</p></a>
+        <a class="station-card anniversary-station" href="#anniversary"><small>NEXT STOP · 2026.12.12</small><strong>兩周年紀念日</strong><p>倒數我哋第二個紀念日，慢慢加入新回憶。</p></a>
+      </div>
+      <p class="portal-note">呢個私人站會繼續更新；已發生嘅回憶會保存，未發生嘅安排唔會預先亂寫。</p>
+    </div>
+  </section>
+  <section class="screen story-section order-section" id="home" data-section="home">
     <div class="hero">
-      <div class="top"><span class="mark">♥</span><span>SUNNY DELIVERY SERVICE</span><span class="pill">ORDER 20261004</span></div>
-      <p class="eyebrow">SPECIAL BIRTHDAY DELIVERY · 2026</p>
+      <div class="top"><span class="mark">♥</span><span>SUNNY DELIVERY SERVICE</span><span class="pill">ARCHIVE 20261004</span></div>
+      <p class="eyebrow">SPECIAL BIRTHDAY DELIVERY · COMPLETED</p>
       <h1>為你送上<br><em>美「臀」服務</em></h1>
-      <p class="subtitle">以下是瑩女友的生日服務 ^_^</p>
+      <p class="subtitle">Tszying 的 2026 生日配送回憶 ^_^</p>
       <div class="recipient">
         <div><span>RECIPIENT</span><b>Tszying</b></div>
         <div><span>DELIVERY DATE</span><b>10 · 04 · 2026</b></div>
       </div>
       <div class="card">
-        <strong><span class="tick">✓</span>生日訂單已確認</strong>
+        <strong><span class="tick">✓</span>生日配送已存檔</strong>
         <p id="countdown">正在計算派送日子</p>
-        <div class="bar"><i></i></div>
-        <div class="bar-label"><span>身份確認</span><span>愛意驗證</span><span>準備完成</span></div>
+        <div class="bar"><i style="width:100%"></i></div>
+        <div class="bar-label"><span>身份確認</span><span>完成派送</span><span>回憶存檔</span></div>
       </div>
     </div>
 
     <div class="section-shell">
       <p class="section-title">ORDER STATUS</p>
-      <h2>今日配送狀態</h2>
+      <h2>生日配送紀錄</h2>
       <div class="status-grid">
         <article><span class="status-icon">✓</span><div><small>IDENTITY</small><b>芷瑩本人已確認</b></div></article>
         <article><span class="status-icon">✓</span><div><small>LOVE CHECK</small><b>專屬愛意驗證完成</b></div></article>
@@ -181,7 +232,7 @@
 
       <div class="birthday-note">
         <span>FOR TSZYING ONLY</span>
-        <strong>今日份生日服務，只限芷瑩本人簽收 💕</strong>
+        <strong>2026年10月4日嘅生日服務，只限芷瑩本人簽收 💕</strong>
       </div>
 
       <div class="mini-stats">
@@ -191,25 +242,31 @@
     </div>
   </section>
 
-  <section class="screen story-section us-section" id="us" data-section="us">
+  <section class="screen story-section anniversary-section" id="anniversary" data-section="anniversary">
+    <div class="anniversary-hero">
+      <div class="top"><span class="mark">♥</span><span>ANNIVERSARY STATION</span><span class="pill">12 · 12</span></div>
+      <p class="eyebrow">OUR SECOND ANNIVERSARY · 2026</p>
+      <h1>兩周年<br><em>發夢站</em></h1>
+      <p class="subtitle">由 2024年12月12日開始，下一站係屬於我哋嘅第二個紀念日。</p>
+      <div class="anniversary-stats"><div><span>NEXT ANNIVERSARY</span><b id="anniversaryCountdown">正在計算倒數</b></div><div><span>TOGETHER</span><b id="togetherDays">正在計算日數</b></div></div>
+    </div>
     <div class="section-shell">
-      <div class="top"><span class="mark">♥</span><span>OUR STORY</span><span class="pill">SINCE 2024</span></div>
-      <p class="section-title">US · TOGETHER</p>
+      <p class="section-title">OUR STORY · TOGETHER</p>
       <h2>我們的時間線</h2>
-      <p class="section-lead">由第一日開始，到今日繼續一齊儲低更多日子。</p>
+      <p class="section-lead">由第一日開始，到今日繼續一齊儲低更多日子；新行程會喺真正發生後先加入。</p>
 
       <div class="story-timeline">
         <article>
           <span class="story-date">2024 · 12 · 12</span>
-          <div><small>START</small><h3>開始拍拖 ❤️</h3><p>呢一日成為我哋故事嘅起點。</p></div>
-        </article>
-        <article>
-          <span class="story-date">一路以來</span>
-          <div><small>TOGETHER</small><h3>一齊儲回憶</h3><p>食飯、出街、旅行、影相，慢慢將普通日子變成我哋嘅記憶。</p></div>
+          <div><small>START</small><h3>我哋開始咗 ❤️</h3><p>呢一日成為我哋故事嘅起點。</p></div>
         </article>
         <article>
           <span class="story-date">2026 · 10 · 04</span>
-          <div><small>TODAY</small><h3>芷瑩生日 🎂</h3><p>今日份 Sunny Birthday Delivery，正式送到。</p></div>
+          <div><small>NEW MEMORY</small><h3>生日配送完成 🎂</h3><p>今年生日成為我哋時間線入面新嘅一頁。</p></div>
+        </article>
+        <article>
+          <span class="story-date">2026 · 12 · 12</span>
+          <div><small>NEXT CHAPTER</small><h3>第二個紀念日</h3><p>兩周年頁面已經開站，等待新回憶逐一解鎖。</p></div>
         </article>
       </div>
 
@@ -261,9 +318,10 @@
   </section>
 
   <nav class="bottom" aria-label="網站導覽">
-    <a class="active" href="#home" data-go="home"><i>⌂</i><span>訂單</span></a>
-    <a href="#us" data-go="us"><i>⌁</i><span>我們</span></a>
+    <a class="active" href="#portal" data-go="portal"><i>⌂</i><span>入口</span></a>
+    <a href="#home" data-go="home"><i>◌</i><span>生日</span></a>
+    <a href="#anniversary" data-go="anniversary"><i>♡</i><span>紀念日</span></a>
     <a href="#memory" data-go="memory"><i>▧</i><span>回憶</span></a>
     <a href="#gift" data-go="gift"><i>♢</i><span>禮物</span></a>
   </nav>
-</div><script src="guess-log.js?v=1"></script><script src="entry-flow.js?v=8"></script></body></html>
+</div><script src="guess-log.js?v=1"></script><script src="entry-flow.js?v=9"></script></body></html>
