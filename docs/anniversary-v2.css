@@ -1,0 +1,50 @@
+/* Two-year anniversary experience: heart constellation + 24-month memory tickets */
+.anniversary-gate{background:radial-gradient(circle at 82% 5%,rgba(255,210,181,.22),transparent 25%),radial-gradient(circle at 8% 92%,rgba(164,111,143,.2),transparent 30%),linear-gradient(155deg,#1d1932,#4d365d 52%,#855566)}
+.anniversary-box{background:rgba(255,255,255,.1)}
+.heart-map{position:relative;min-height:440px;margin-top:12px;border:1px solid rgba(255,255,255,.14);border-radius:24px;background:radial-gradient(circle at 50% 45%,rgba(206,121,147,.18),transparent 45%),rgba(8,10,32,.42);overflow:hidden}
+.heart-map svg{position:absolute;inset:7%;width:86%;height:86%;overflow:visible}
+.heart-route-base,.heart-route-live{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.heart-route-base{stroke:rgba(255,255,255,.14);stroke-width:1.7}
+.heart-route-live{stroke:#f8d8a6;stroke-width:2.4;stroke-dasharray:100;stroke-dashoffset:100;filter:drop-shadow(0 0 5px rgba(248,216,166,.75));transition:stroke-dashoffset .45s ease}
+.heart-point{position:absolute;z-index:2;display:grid;width:42px;height:42px;place-items:center;border:0;border-radius:50%;background:transparent;color:#7f7896;font-size:21px;transform:translate(-50%,-50%);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.heart-point.done{color:#f8d8a6;text-shadow:0 0 13px currentColor}
+.heart-point.current{color:#fff7e9;font-size:30px;text-shadow:0 0 18px #f8d8a6;animation:starPulse 1s ease-in-out infinite}
+.heart-point:focus-visible{outline:3px solid #f8d8a6;outline-offset:2px}
+.heart-memory{position:absolute;z-index:3;right:14px;bottom:14px;left:14px;min-height:64px;padding:12px 14px;border:1px solid rgba(255,255,255,.17);border-radius:15px;background:rgba(23,18,45,.82);box-shadow:0 10px 25px rgba(0,0,0,.2);backdrop-filter:blur(9px)}
+.heart-memory small{display:block;margin-bottom:4px;color:#f1cfa2;font-size:8px;font-weight:900;letter-spacing:.11em}
+.heart-memory strong{display:block;color:#fff9f1;font-size:13px;line-height:1.45}
+.heart-complete .heart-route-live{filter:drop-shadow(0 0 11px #eaaeb9)}
+
+.journey-box{width:min(100%,590px)}
+.journey-intro{margin-bottom:10px!important}
+.ticket-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-height:47svh;padding:3px 2px 10px;overflow:auto;scrollbar-width:thin}
+.month-ticket{position:relative;min-height:70px;padding:9px 4px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:rgba(255,255,255,.075);color:#ece2eb;text-align:center;font:800 10px/1.25 ui-rounded,"PingFang HK",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.month-ticket span{display:block;margin-top:5px;color:#bdaec3;font-size:8px;font-weight:700}
+.month-ticket.has-memory{background:linear-gradient(145deg,rgba(241,207,162,.2),rgba(255,255,255,.08));color:#fff7e9}
+.month-ticket.stamped{border-color:#f1cfa2;background:#f1cfa2;color:#3d2945}
+.month-ticket.stamped span{color:#684f64}
+.month-ticket.stamped:after{content:"✓";position:absolute;top:5px;right:6px;font-size:10px}
+.month-ticket:focus-visible{outline:3px solid #f1cfa2;outline-offset:2px}
+.journey-card{position:fixed;z-index:95;inset:0;display:grid;place-items:end center;padding:18px;background:rgba(13,9,28,.68);backdrop-filter:blur(8px)}
+.journey-card[hidden]{display:none}
+.journey-card-inner{position:relative;width:min(100%,520px);max-height:86svh;overflow:auto;padding:22px;border:1px solid rgba(255,255,255,.22);border-radius:25px;background:linear-gradient(165deg,#fff8ef,#f0dcd7);color:#563644;box-shadow:0 26px 75px rgba(0,0,0,.38);animation:ticketUp .28s ease-out}
+@keyframes ticketUp{from{opacity:.4;transform:translateY(24px)}to{opacity:1;transform:none}}
+.journey-card-close{position:sticky;z-index:2;top:0;float:right;width:40px;height:40px;border:0;border-radius:50%;background:#563644;color:#fff8ef;font:900 18px/1 inherit}
+.journey-card .eyebrow{margin:3px 48px 8px 0;color:#9c6b73}
+.journey-card h3{margin:0 48px 8px 0;font-size:27px;line-height:1.12;letter-spacing:-.04em}
+.journey-date{margin:0 0 14px;color:#9a747b;font-size:10px;font-weight:800;letter-spacing:.07em}
+.journey-copy{margin:0 0 16px;color:#6d5059;font-size:14px;line-height:1.7}
+.journey-photo-strip{display:flex;gap:9px;margin:0 -3px 16px;padding:3px;overflow-x:auto;scroll-snap-type:x mandatory}
+.journey-photo-strip img{display:block;flex:0 0 min(82%,330px);width:min(82%,330px);max-height:360px;border-radius:16px;background:#e4d7d2;object-fit:contain;scroll-snap-align:center;box-shadow:0 7px 18px rgba(74,42,53,.13)}
+.journey-ascii{overflow:auto;margin:0 0 16px;padding:15px;border-radius:15px;background:#fffdf7;color:#4e3943;font:700 13px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre}
+.journey-action{width:100%;min-height:48px;border:0;border-radius:12px;background:#563644;color:#fff8ef;font:900 13px inherit}
+.journey-action.done{background:#a17680}
+.journey-card[data-kind="bounce"] .journey-action:active{transform:translateY(-7px) rotate(-2deg)}
+.journey-card[data-kind="flower"] .journey-action:active{transform:scale(1.04)}
+.journey-card[data-kind="travel"] .journey-action{border:2px dashed #fff8ef}
+.journey-card[data-kind="quiet"] .journey-card-inner{background:linear-gradient(165deg,#f4ede5,#dddccf)}
+.journey-note{margin:10px 0 0;text-align:center;color:#cdbdce;font-size:9px}
+
+.month-card{overflow:hidden;padding:0}.month-card-image{display:block;width:100%;height:132px;background:#eaded8;object-fit:contain}.month-card-body{padding:15px}.month-card.low{opacity:.78}.relationship-quote{line-height:1.7}
+@media(max-width:520px){.heart-map{min-height:430px}.heart-point{width:40px;height:40px}.ticket-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-height:43svh}.journey-card{padding:10px}.journey-card-inner{padding:19px}.journey-photo-strip img{flex-basis:88%}}
+@media(prefers-reduced-motion:reduce){.heart-point.current,.preview-heart{animation:none}.heart-route-live{transition:none}.journey-card-inner{animation:none}}

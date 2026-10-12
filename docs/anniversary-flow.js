@@ -2,66 +2,76 @@
   const FIRST_PASSWORD = '瑩輝241212^_^';
   const SECOND_PASSWORD = '朗屏巴士總站';
   const STAR_TOTAL = 12;
-  const BUS_TOTAL = 24;
+  const MONTH_TOTAL = 24;
   const REVEAL_AT = new Date('2026-12-12T00:00:00+08:00');
   const keys = {
-    step: 'sunny-anniversary-step-v1',
-    stars: 'sunny-anniversary-stars-v1',
-    bus: 'sunny-anniversary-bus-v1',
-    complete: 'sunny-anniversary-complete-v1'
+    step: 'sunny-anniversary-step-v2',
+    stars: 'sunny-anniversary-stars-v2',
+    months: 'sunny-anniversary-months-v2',
+    complete: 'sunny-anniversary-complete-v2'
   };
 
+  const photo = number => `images/anniversary/${String(number).padStart(2, '0')}.jpg`;
+  const MONTHS = [
+    {title:'由朗屏去到第一個約會', kind:'start', photos:[photo(1),photo(2),photo(3)], alt:['牛角飯局留影','Big Bounce Asia 一齊玩嘅相','Big Bounce Asia 當日留影'], copy:'2024年12月12日夜晚，我哋喺朗屏巴士總站開始。第二日同你兩位大學朋友食牛角，仲撞正其中一位生日；到1月5日，再一齊去 Big Bounce Asia 跳餐飽。', action:'由第一站開始儲低'},
+    {title:'年宵、整杯，同埋陪伴', kind:'quiet', photos:[photo(4),photo(5),photo(6)], alt:['第一次一齊行維園年宵','生日一齊整陶瓷杯','屯門醫院陪伴嘅一刻'], copy:'第一次一齊行維園年宵，就係周圍行吓；2月1日生日一齊整杯。到我盲腸炎入院，你喺探病時間過嚟，趁我瞓着影低咗呢張相。有你坐喺身邊，已經夠。', action:'收低呢段陪伴'},
+    {title:'收埋喺身後嘅花', kind:'flower', photos:[photo(7)], alt:['第一次情人節送花留影'], copy:'第一次一齊過情人節。喺商場等你去完洗手間，我將花收埋喺身後；你返嚟嗰刻，先拎出嚟送畀你。', action:'收低朵花 🌷'},
+    {title:'「禾嘅愛」同杯上面嘅我哋', kind:'rabbit', photos:[photo(8)], alt:['一齊完成杯上圖案嘅留影'], ascii:'{\\__/} \n( • - •) \n/ > ❤️\n你睇，依個禾嘅愛！\n\n{\\__/} \n( - _ -)\n/ >❤️\n你唔應係喵意思？\n\n{\\__/} \n( • - •) \n❤️< \\\n喔~咁我收返先!', copy:'3月26日嗰段傻兔仔訊息，我一直記得。4月6日，我哋再一齊完成杯上面嗰幅圖——就係我哋成日用、我又好鍾意嗰對攬住同錫錫嘅角色。', action:'唔好收返，畀我 ❤️'},
+    {title:'留住五月前半頁', kind:'open', copy:'呢個月嘅相同細節仲未整理好。唔亂作住，先留一格畀我哋之後補返。', action:'先打個留位印'},
+    {title:'終於拎到我哋隻杯', kind:'cup', photos:[photo(9)], alt:['拎到完成陶瓷杯嘅合照'], copy:'由2月整杯、4月畫好圖案，到5月29日終於拎到製成品。呢隻杯唔只係作品，係我哋分三次一齊完成嘅小故事。', action:'完成三步杯仔故事 ☕'},
+    {title:'普通日子照樣儲低', kind:'open', copy:'呢段時間未揀到最想放入嚟嗰個畫面。先留返空位，等 Sunny 補相同故事。', action:'留低呢一頁'},
+    {title:'第一次一齊去大阪', kind:'travel', photos:[photo(10),photo(11)], alt:['出發大阪嘅機上留影','日本旅程交通留影'], copy:'7月29日由香港飛去大阪，第二日去環球影城，8月1日去世博。其他日子唔逐格背行程啦，最重要係第一次一齊去日本。', action:'蓋個大阪出發印 🇯🇵'},
+    {title:'旅行返嚟嘅日常', kind:'open', copy:'旅行完返到香港，日子又繼續。呢個月暫時留白，之後先揀一件最值得記住嘅小事。', action:'留低呢一頁'},
+    {title:'十月呢頁等緊你', kind:'open', copy:'暫時未寫好。呢張車票唔會亂填，等有真實回憶先再補。', action:'先打個留位印'},
+    {title:'十一月呢頁等緊你', kind:'open', copy:'有啲日子唔需要即刻寫成故事。呢頁先留低，遲啲再一齊揀。', action:'留低呢一頁'},
+    {title:'第一年，準備出發', kind:'open', copy:'由開始拍拖去到差唔多一年，呢一頁係第一周年旅行前嘅倒數。', action:'行到第一年'},
+    {title:'同一個12月12日，去台北', kind:'travel', copy:'一年前喺朗屏巴士總站開始；一年後嘅同一日，我哋一齊飛去台北。行過士林夜市、饒河夜市，將第一周年變成一段旅程。', action:'蓋個台北周年印 ✈️'},
+    {title:'新一年第一頁', kind:'open', copy:'第二年嘅第一個月，暫時先留住位置。之後有相、有故事，再慢慢補返。', action:'打開第二年'},
+    {title:'二月呢頁等緊你', kind:'open', copy:'呢個月嘅回憶仲未整理好，所以唔會為填滿而作故事。', action:'先打個留位印'},
+    {title:'澳門珠海：我哋兩個先行', kind:'travel', copy:'4月11日，第一次一齊去澳門珠海。第一日得我哋兩個，冇特別趕行程，就咁一齊周圍行。', action:'收低第一日車票'},
+    {title:'第二日先同朋友集合', kind:'travel', copy:'4月12日先同你兩位大學朋友集合，食完晏就一齊去賭場。去過梳打冰室、買過手信，仲記得一路搭免費接駁車。細節唔使堆到太滿，記住係第一次就夠。', action:'蓋個澳門珠海印'},
+    {title:'五月呢頁等緊你', kind:'open', copy:'呢一頁而家仲係空白。留返畀真正發生過、又想記住嘅事。', action:'留低呢一頁'},
+    {title:'六月呢頁等緊你', kind:'open', copy:'未揀好呢個月嘅代表回憶，先唔亂加。', action:'先打個留位印'},
+    {title:'曼谷：食、按、影泰服', kind:'travel', copy:'7月30日至8月4日嘅曼谷旅程，最記得一齊做泰式按摩、周圍試唔同嘢食，仲有一齊影泰服。三樣已經夠代表嗰次旅行。', action:'蓋個曼谷印 🇹🇭'},
+    {title:'八月呢頁等緊你', kind:'open', copy:'旅行之後嘅呢頁，等之後揀返一件最想留下嘅事。', action:'留低呢一頁'},
+    {title:'生日配送完成', kind:'birthday', photos:['images/memory-01.webp'], alt:['2026生日配送回憶海報'], copy:'10月4日，生日配送正式完成。暗號、12個「愛你」、24下心心，連同生日鞋履，一齊變成呢個私人站嘅一部分。', action:'簽收生日配送 💚'},
+    {title:'兩周年前嘅一個月', kind:'open', copy:'差一個月就兩周年。呢頁唔預先寫結局，留返畀真正發生嗰日。', action:'繼續行落去'},
+    {title:'去到第24個月', kind:'final', copy:'24個月唔係24件大事，而係好多普通日子一齊行出嚟。呢張係最後一張車票；完整內容要等12月12日先正式開。', action:'收低第24張車票 ♥'}
+  ];
+
+  const STAR_MEMORIES = [
+    ['2024.12.12','朗屏巴士總站，約夜晚11點，我哋由呢度開始。'],
+    ['2024.12.13','第二日同你兩位大學朋友食牛角，係我哋第一個正式約會。'],
+    ['2025.01.05','Big Bounce Asia，一齊跳嚟跳去，玩到好開心。'],
+    ['2025.01.25','第一次一齊行維園年宵，就咁周圍行。'],
+    ['2025.02.01','生日一齊整杯，開咗呢個小作品嘅第一步。'],
+    ['2025.02.09','屯門醫院嗰日，有你坐喺身邊已經夠。'],
+    ['2025.02.14','商場入面，收埋喺身後嘅花終於送到你手。'],
+    ['2025.03.26','「你睇，依個禾嘅愛！」傻得嚟好想一直留住。'],
+    ['2025.07.29','第一次一齊飛去大阪。'],
+    ['2025.12.12','同一個12月12日，一齊去台北過第一周年。'],
+    ['2026.04.11','第一次一齊去澳門珠海，第一日得我哋兩個周圍行。'],
+    ['2026.07.30','曼谷：泰式按摩、周圍食，同埋一齊影泰服。']
+  ];
+
+  const STAR_POSITIONS = [[50,84],[34,69],[21,54],[15,37],[20,23],[34,20],[50,36],[66,20],[80,23],[85,37],[79,54],[66,69]];
   const elements = {
-    app: document.querySelector('.app'),
-    gate: document.querySelector('#anniversaryGate'),
-    close: document.querySelector('#anniversaryClose'),
-    enter: document.querySelector('#anniversaryEnter'),
-    nav: document.querySelector('#anniversaryNav'),
-    passPanel: document.querySelector('#anniversaryPassPanel'),
-    form: document.querySelector('#anniversaryForm'),
-    pass: document.querySelector('#anniversaryPass'),
-    stage: document.querySelector('#anniversaryStage'),
-    title: document.querySelector('#anniversaryPassTitle'),
-    copy: document.querySelector('#anniversaryPassCopy'),
-    label: document.querySelector('#anniversaryLabel'),
-    error: document.querySelector('#anniversaryError'),
-    starGame: document.querySelector('#starGame'),
-    starField: document.querySelector('#starField'),
-    starCount: document.querySelector('#starCount'),
-    starBar: document.querySelector('#starBar'),
-    starMessage: document.querySelector('#starMessage'),
-    busGame: document.querySelector('#busGame'),
-    busCount: document.querySelector('#busCount'),
-    busBar: document.querySelector('#busBar'),
-    busRoute: document.querySelector('#busRoute'),
-    busIcon: document.querySelector('#busIcon'),
-    busStops: document.querySelector('#busStops'),
-    busMessage: document.querySelector('#busMessage'),
-    preview: document.querySelector('#anniversaryPreview'),
-    countdown: document.querySelector('#anniversaryLiveCountdown'),
-    previewBack: document.querySelector('#previewBack'),
-    section: document.querySelector('#anniversary'),
-    timeline: document.querySelector('#monthTimeline')
+    gate: document.querySelector('#anniversaryGate'), close: document.querySelector('#anniversaryClose'), enter: document.querySelector('#anniversaryEnter'), nav: document.querySelector('#anniversaryNav'),
+    passPanel: document.querySelector('#anniversaryPassPanel'), form: document.querySelector('#anniversaryForm'), pass: document.querySelector('#anniversaryPass'), stage: document.querySelector('#anniversaryStage'), title: document.querySelector('#anniversaryPassTitle'), copy: document.querySelector('#anniversaryPassCopy'), label: document.querySelector('#anniversaryLabel'), error: document.querySelector('#anniversaryError'),
+    starGame: document.querySelector('#starGame'), starField: document.querySelector('#starField'), starCount: document.querySelector('#starCount'), starBar: document.querySelector('#starBar'), starMessage: document.querySelector('#starMessage'), starMemory: document.querySelector('#starMemory'), heartRoute: document.querySelector('#heartRouteLive'),
+    busGame: document.querySelector('#busGame'), busCount: document.querySelector('#busCount'), busBar: document.querySelector('#busBar'), busMessage: document.querySelector('#busMessage'), tickets: document.querySelector('#monthTickets'),
+    journeyCard: document.querySelector('#journeyCard'), journeyClose: document.querySelector('#journeyClose'), journeyMonth: document.querySelector('#journeyMonth'), journeyTitle: document.querySelector('#journeyTitle'), journeyDate: document.querySelector('#journeyDate'), journeyPhotos: document.querySelector('#journeyPhotos'), journeyAscii: document.querySelector('#journeyAscii'), journeyCopy: document.querySelector('#journeyCopy'), journeyStamp: document.querySelector('#journeyStamp'),
+    preview: document.querySelector('#anniversaryPreview'), countdown: document.querySelector('#anniversaryLiveCountdown'), previewBack: document.querySelector('#previewBack'), section: document.querySelector('#anniversary'), timeline: document.querySelector('#monthTimeline')
   };
   if (!elements.gate || !elements.enter) return;
 
   let passStage = 1;
+  let activeMonth = 0;
   let countdownTimer;
-  const starPositions = [
-    [18, 22], [68, 18], [42, 33], [82, 42], [24, 51], [58, 58],
-    [77, 70], [35, 76], [14, 66], [52, 84], [88, 24], [48, 48]
-  ];
-  const starMessages = [
-    '第一點星光已記低', '夜空開始有我哋嘅路線', '第三粒星都搵到啦', '慢慢連成一條路',
-    '差唔多行到一半', '6 / 12，已經一半', '星光繼續向前', '留意會呼吸嗰粒星',
-    '12 · 12 開始成形', '最後三粒', '差一粒就完成', '12點星光路線完成'
-  ];
 
   function splitGraphemes(value) {
     const normalized = String(value ?? '').normalize('NFC');
-    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
-      return [...new Intl.Segmenter('zh-Hant', {granularity: 'grapheme'}).segment(normalized)].map(item => item.segment);
-    }
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) return [...new Intl.Segmenter('zh-Hant', {granularity:'grapheme'}).segment(normalized)].map(item => item.segment);
     const result = [];
     for (const character of Array.from(normalized)) {
       if ((character === '\uFE0E' || character === '\uFE0F') && result.length) result[result.length - 1] += character;
@@ -69,14 +79,8 @@
     }
     return result;
   }
-
-  function graphemeKey(value) {
-    return value.replace(/[\uFE0E\uFE0F]/gu, '');
-  }
-
-  function normalize(value) {
-    return splitGraphemes(String(value).trim()).map(graphemeKey).join('');
-  }
+  const graphemeKey = value => value.replace(/[\uFE0E\uFE0F]/gu, '');
+  const normalize = value => splitGraphemes(String(value).trim()).map(graphemeKey).join('');
 
   function scoreGuess(guess, answer) {
     const guessed = splitGraphemes(guess).map(graphemeKey);
@@ -84,278 +88,177 @@
     const remaining = new Map();
     expected.forEach(character => remaining.set(character, (remaining.get(character) || 0) + 1));
     let matched = 0;
-    guessed.forEach(character => {
-      const available = remaining.get(character) || 0;
-      if (available > 0) {
-        matched += 1;
-        remaining.set(character, available - 1);
-      }
-    });
+    guessed.forEach(character => { const available = remaining.get(character) || 0; if (available > 0) { matched += 1; remaining.set(character, available - 1); } });
     const placed = guessed.reduce((total, character, index) => total + Number(character === expected[index]), 0);
-    return {matched, placed, total: expected.length};
+    return {matched, placed, total:expected.length};
   }
 
-  function readCount(key, maximum) {
-    const value = Number.parseInt(sessionStorage.getItem(key) || '0', 10);
-    return Number.isFinite(value) ? Math.min(maximum, Math.max(0, value)) : 0;
+  function readStarCount() {
+    const value = Number.parseInt(sessionStorage.getItem(keys.stars) || '0', 10);
+    return Number.isFinite(value) ? Math.min(STAR_TOTAL, Math.max(0, value)) : 0;
+  }
+  function readStamped() {
+    try {
+      const parsed = JSON.parse(sessionStorage.getItem(keys.months) || '[]');
+      return new Set(Array.isArray(parsed) ? parsed.filter(value => Number.isInteger(value) && value >= 0 && value < MONTH_TOTAL) : []);
+    } catch { return new Set(); }
+  }
+  function saveStamped(stamped) { sessionStorage.setItem(keys.months, JSON.stringify([...stamped].sort((a,b) => a-b))); }
+  function monthRange(index) {
+    const start = new Date(Date.UTC(2024, 11 + index, 12));
+    const end = new Date(Date.UTC(2025, index, 11));
+    const pad = value => String(value).padStart(2, '0');
+    const show = value => `${value.getUTCFullYear()}.${pad(value.getUTCMonth()+1)}.${pad(value.getUTCDate())}`;
+    return `${show(start)} — ${show(end)}`;
   }
 
   function setBackgroundLocked(locked) {
-    document.querySelectorAll('.story-section,.bottom').forEach(node => {
-      node.inert = locked;
-      if (locked) node.setAttribute('aria-hidden', 'true');
-      else node.removeAttribute('aria-hidden');
-    });
+    document.querySelectorAll('.story-section,.bottom').forEach(node => { node.inert = locked; if (locked) node.setAttribute('aria-hidden','true'); else node.removeAttribute('aria-hidden'); });
   }
-
-  function setActiveNav(id) {
-    document.querySelectorAll('.bottom [data-go]').forEach(link => link.classList.toggle('active', link.dataset.go === id));
-  }
-
+  function setActiveNav(id) { document.querySelectorAll('.bottom [data-go]').forEach(link => link.classList.toggle('active', link.dataset.go === id)); }
   function showOnly(panel) {
-    [elements.passPanel, elements.starGame, elements.busGame, elements.preview].forEach(item => { item.hidden = item !== panel; });
+    [elements.passPanel,elements.starGame,elements.busGame,elements.preview].forEach(item => { item.hidden = item !== panel; });
+    elements.journeyCard.hidden = true;
     elements.gate.scrollTop = 0;
   }
-
   function openGate() {
     elements.gate.hidden = false;
     document.body.classList.add('modal-open');
     setBackgroundLocked(true);
-    if (localStorage.getItem(keys.complete) === 'yes') {
-      if (Date.now() >= REVEAL_AT.getTime()) revealFullSite();
-      else showPreview();
-      return;
-    }
+    if (localStorage.getItem(keys.complete) === 'yes') { if (Date.now() >= REVEAL_AT.getTime()) revealFullSite(); else showPreview(); return; }
     const step = sessionStorage.getItem(keys.step) || 'first';
-    if (step === 'stars') showStarGame();
-    else if (step === 'second') showSecondPassword();
-    else if (step === 'bus') showBusGame();
-    else showFirstPassword();
+    if (step === 'stars') showStarGame(); else if (step === 'second') showSecondPassword(); else if (step === 'months') showMonthGame(); else showFirstPassword();
   }
-
-  function closeGate({returnToPortal = true} = {}) {
+  function closeGate({returnToPortal=true}={}) {
     clearInterval(countdownTimer);
+    elements.journeyCard.hidden = true;
     elements.gate.hidden = true;
     document.body.classList.remove('modal-open');
     setBackgroundLocked(false);
-    if (returnToPortal) {
-      setActiveNav('portal');
-      document.querySelector('#portal').scrollIntoView({behavior: 'smooth'});
-    }
+    if (returnToPortal) { setActiveNav('portal'); document.querySelector('#portal').scrollIntoView({behavior:'smooth'}); }
   }
 
   function showFirstPassword() {
-    passStage = 1;
-    sessionStorage.setItem(keys.step, 'first');
-    showOnly(elements.passPanel);
-    elements.stage.textContent = 'ANNIVERSARY CHECK · 01 / 02';
-    elements.title.innerHTML = '第一個<br>周年暗號';
-    elements.copy.textContent = '提示：我哋嘅名字、日期，同一個熟悉表情。答案共有 11 個字元。';
-    elements.label.textContent = '第一個紀念日口令 · 11 個字元';
-    elements.pass.value = '';
-    elements.error.textContent = '';
-    setTimeout(() => elements.pass.focus(), 50);
+    passStage = 1; sessionStorage.setItem(keys.step,'first'); showOnly(elements.passPanel);
+    elements.stage.textContent = 'ANNIVERSARY CHECK · 01 / 02'; elements.title.innerHTML = '第一個<br>周年暗號';
+    elements.copy.textContent = '提示：我哋嘅名字、開始日期，同一個熟悉表情。答案共有 11 個字元。';
+    elements.label.textContent = '第一個紀念日口令 · 11 個字元'; elements.pass.value = ''; elements.error.textContent = '';
+    setTimeout(() => elements.pass.focus(),50);
   }
-
   function showSecondPassword() {
-    passStage = 2;
-    sessionStorage.setItem(keys.step, 'second');
-    showOnly(elements.passPanel);
-    elements.stage.textContent = 'ANNIVERSARY CHECK · 02 / 02';
-    elements.title.innerHTML = '我哋開始嘅<br>第一個地方';
-    elements.copy.textContent = '提示：夜晚約11時，一個屬於我哋嘅巴士總站。答案共有 6 個中文字。';
-    elements.label.textContent = '第二個紀念日口令 · 6 個中文字';
-    elements.pass.value = '';
-    elements.error.textContent = '';
-    setTimeout(() => elements.pass.focus(), 50);
+    passStage = 2; sessionStorage.setItem(keys.step,'second'); showOnly(elements.passPanel);
+    elements.stage.textContent = 'ANNIVERSARY CHECK · 02 / 02'; elements.title.innerHTML = '我哋開始嘅<br>第一個地方';
+    elements.copy.textContent = '提示：夜晚大約11點，嗰個屬於我哋嘅巴士總站。答案共有 6 個中文字。';
+    elements.label.textContent = '第二個紀念日口令 · 6 個中文字'; elements.pass.value = ''; elements.error.textContent = '';
+    setTimeout(() => elements.pass.focus(),50);
   }
 
+  function showStarMemory(index, upcoming=false) {
+    const [date,copy] = STAR_MEMORIES[index];
+    elements.starMemory.replaceChildren();
+    const small = document.createElement('small'); const strong = document.createElement('strong');
+    small.textContent = upcoming ? `第一點 · ${date}` : `第 ${index+1} 點 · ${date}`; strong.textContent = copy;
+    elements.starMemory.append(small,strong);
+  }
   function renderStars() {
-    const count = readCount(keys.stars, STAR_TOTAL);
-    elements.starCount.textContent = `已點亮 ${count} / ${STAR_TOTAL}`;
-    elements.starBar.style.width = `${count / STAR_TOTAL * 100}%`;
-    elements.starField.replaceChildren();
-    for (let index = 0; index < count; index += 1) {
-      const [left, top] = starPositions[index];
-      const dot = document.createElement('span');
-      dot.className = 'constellation-dot';
-      dot.style.left = `${left}%`;
-      dot.style.top = `${top}%`;
-      elements.starField.append(dot);
-    }
-    if (count >= STAR_TOTAL) return;
-    const [left, top] = starPositions[count];
-    const trueStar = document.createElement('button');
-    trueStar.type = 'button';
-    trueStar.className = 'star-target true';
-    trueStar.setAttribute('aria-label', '會呼吸閃動的正確星星');
-    trueStar.textContent = '✦';
-    trueStar.style.left = `${left}%`;
-    trueStar.style.top = `${top}%`;
-    trueStar.addEventListener('click', catchStar);
-    elements.starField.append(trueStar);
-    [[(left + 37) % 84 + 8, (top + 31) % 76 + 12], [(left + 61) % 84 + 8, (top + 53) % 76 + 12]].forEach(([x, y]) => {
-      const decoy = document.createElement('button');
-      decoy.type = 'button';
-      decoy.className = 'star-target decoy';
-      decoy.setAttribute('aria-label', '普通星星');
-      decoy.textContent = '✧';
-      decoy.style.left = `${x}%`;
-      decoy.style.top = `${y}%`;
-      decoy.addEventListener('click', () => {
-        elements.starMessage.textContent = '再望清楚邊粒星最掛住你 ✨';
-        if (navigator.vibrate) navigator.vibrate(15);
-      });
-      elements.starField.append(decoy);
+    const count = readStarCount();
+    elements.starCount.textContent = `已點亮 ${count} / ${STAR_TOTAL}`; elements.starBar.style.width = `${count / STAR_TOTAL * 100}%`;
+    elements.starField.classList.toggle('heart-complete', count === STAR_TOTAL);
+    elements.starField.querySelectorAll('.heart-point').forEach(node => node.remove());
+    elements.heartRoute.style.strokeDashoffset = String(100 * (1 - count / STAR_TOTAL));
+    STAR_POSITIONS.forEach(([left,top], index) => {
+      const button = document.createElement('button'); button.type = 'button';
+      button.className = `heart-point${index < count ? ' done' : ''}${index === count ? ' current' : ''}`;
+      button.style.left = `${left}%`; button.style.top = `${top}%`; button.textContent = index < count ? '✦' : '✧';
+      button.setAttribute('aria-label', index === count ? `點亮第${index+1}個回憶點` : `第${index+1}個回憶點`);
+      button.addEventListener('click', () => { if (index === count) catchStar(); else if (index < count) showStarMemory(index); else elements.starMessage.textContent = '跟住而家最光嗰粒行先 ✨'; });
+      elements.starField.append(button);
     });
+    if (count === 0) showStarMemory(0,true);
   }
-
   function catchStar() {
-    const count = Math.min(STAR_TOTAL, readCount(keys.stars, STAR_TOTAL) + 1);
-    sessionStorage.setItem(keys.stars, String(count));
-    elements.starMessage.textContent = starMessages[count - 1];
-    if (navigator.vibrate) navigator.vibrate(count === STAR_TOTAL ? [25, 35, 65] : 15);
-    renderStars();
-    if (count === STAR_TOTAL) setTimeout(showSecondPassword, 850);
+    const next = Math.min(STAR_TOTAL, readStarCount()+1); sessionStorage.setItem(keys.stars,String(next)); showStarMemory(next-1);
+    elements.starMessage.textContent = next === STAR_TOTAL ? '12點連成一顆心。呢條路線完成啦 ♥' : `第 ${next} 點已亮，下一粒都喺心形路線上。`;
+    if (navigator.vibrate) navigator.vibrate(next === STAR_TOTAL ? [25,35,65] : 15);
+    renderStars(); if (next === STAR_TOTAL) setTimeout(showSecondPassword,1200);
   }
+  function showStarGame() { sessionStorage.setItem(keys.step,'stars'); showOnly(elements.starGame); elements.starMessage.textContent = readStarCount() ? '沿住最光嗰一點繼續行。' : '由最下面嗰粒星開始。'; renderStars(); }
 
-  function showStarGame() {
-    sessionStorage.setItem(keys.step, 'stars');
-    showOnly(elements.starGame);
-    elements.starMessage.textContent = readCount(keys.stars, STAR_TOTAL) ? '沿住之前嘅星光繼續行' : '第一粒星正等緊你';
-    renderStars();
+  function renderTickets() {
+    const stamped = readStamped(); elements.tickets.replaceChildren();
+    MONTHS.forEach((month,index) => {
+      const button = document.createElement('button'); button.type = 'button';
+      button.className = `month-ticket${month.kind !== 'open' ? ' has-memory' : ''}${stamped.has(index) ? ' stamped' : ''}`;
+      button.dataset.month = String(index); button.innerHTML = `MONTH ${String(index+1).padStart(2,'0')}<span>${month.kind === 'open' ? '留位中' : '有回憶'}</span>`;
+      button.addEventListener('click', () => openMonth(index)); elements.tickets.append(button);
+    });
+    elements.busCount.textContent = `已收低 ${stamped.size} / ${MONTH_TOTAL} 個月`; elements.busBar.style.width = `${stamped.size / MONTH_TOTAL * 100}%`;
   }
-
-  function buildBusStops() {
-    if (elements.busStops.children.length) return;
-    for (let index = 0; index < BUS_TOTAL; index += 1) elements.busStops.append(document.createElement('span'));
+  function openMonth(index) {
+    activeMonth = index; const month = MONTHS[index]; const stamped = readStamped();
+    elements.journeyCard.dataset.kind = month.kind; elements.journeyMonth.textContent = `MONTH ${String(index+1).padStart(2,'0')} · ${stamped.has(index) ? '已蓋印' : '未蓋印'}`;
+    elements.journeyTitle.textContent = month.title; elements.journeyDate.textContent = monthRange(index); elements.journeyCopy.textContent = month.copy;
+    elements.journeyAscii.hidden = !month.ascii; elements.journeyAscii.textContent = month.ascii || ''; elements.journeyPhotos.replaceChildren();
+    (month.photos || []).forEach((source,photoIndex) => { const image = document.createElement('img'); image.src = source; image.alt = (month.alt || [])[photoIndex] || `${month.title}回憶相片`; image.loading = 'lazy'; elements.journeyPhotos.append(image); });
+    elements.journeyPhotos.hidden = !month.photos?.length; elements.journeyStamp.textContent = stamped.has(index) ? '呢張已經收低 ✓' : month.action;
+    elements.journeyStamp.classList.toggle('done',stamped.has(index)); elements.journeyCard.hidden = false; setTimeout(() => elements.journeyClose.focus(),40);
   }
-
-  function updateBus() {
-    buildBusStops();
-    const count = readCount(keys.bus, BUS_TOTAL);
-    const ratio = count / BUS_TOTAL;
-    elements.busCount.textContent = `已同行 ${count} / ${BUS_TOTAL} 個月`;
-    elements.busBar.style.width = `${ratio * 100}%`;
-    elements.busRoute.style.width = `${ratio * 100}%`;
-    elements.busIcon.style.left = `calc(16px + ${ratio * 78}%)`;
-    [...elements.busStops.children].forEach((stop, index) => stop.classList.toggle('lit', index < count));
-    const expected = count % 2 === 0 ? 'sunny' : 'yingfai';
-    document.querySelectorAll('[data-rider]').forEach(button => button.classList.toggle('expected', button.dataset.rider === expected));
-    if (count && count < BUS_TOTAL && count % 6 === 0) elements.busMessage.textContent = `${count}個月站已到達，繼續一齊行`;
+  function stampMonth() {
+    const stamped = readStamped();
+    if (!stamped.has(activeMonth)) { stamped.add(activeMonth); saveStamped(stamped); if (navigator.vibrate) navigator.vibrate(stamped.size === MONTH_TOTAL ? [30,35,80] : 12); }
+    elements.journeyCard.hidden = true; renderTickets();
+    if (stamped.size === MONTH_TOTAL) { localStorage.setItem(keys.complete,'yes'); sessionStorage.setItem(keys.step,'preview'); elements.busMessage.textContent = '24張車票收齊。去睇倒數啦 ♥'; setTimeout(showPreview,700); }
+    else elements.busMessage.textContent = `第 ${activeMonth+1} 個月已收低；仲有 ${MONTH_TOTAL-stamped.size} 張。`;
   }
-
-  function rideBus(rider) {
-    const count = readCount(keys.bus, BUS_TOTAL);
-    const expected = count % 2 === 0 ? 'sunny' : 'yingfai';
-    if (rider !== expected) {
-      elements.busMessage.textContent = '要兩個人左右交替，架車先行得到 💕';
-      if (navigator.vibrate) navigator.vibrate(18);
-      return;
-    }
-    const next = Math.min(BUS_TOTAL, count + 1);
-    sessionStorage.setItem(keys.bus, String(next));
-    elements.busMessage.textContent = next === BUS_TOTAL ? '24個月同行完成，尾班車到站啦' : `第 ${next} 個月已點亮`;
-    if (navigator.vibrate) navigator.vibrate(next === BUS_TOTAL ? [30, 35, 80] : 12);
-    updateBus();
-    if (next === BUS_TOTAL) {
-      localStorage.setItem(keys.complete, 'yes');
-      sessionStorage.setItem(keys.step, 'preview');
-      setTimeout(showPreview, 850);
-    }
-  }
-
-  function showBusGame() {
-    sessionStorage.setItem(keys.step, 'bus');
-    showOnly(elements.busGame);
-    updateBus();
-  }
+  function showMonthGame() { sessionStorage.setItem(keys.step,'months'); showOnly(elements.busGame); renderTickets(); }
 
   function updateCountdown() {
-    const difference = Math.max(0, REVEAL_AT.getTime() - Date.now());
-    const days = Math.floor(difference / 86400000);
-    const hours = Math.floor(difference / 3600000) % 24;
-    const minutes = Math.floor(difference / 60000) % 60;
-    const seconds = Math.floor(difference / 1000) % 60;
-    [days, hours, minutes, seconds].forEach((value, index) => {
-      elements.countdown.children[index].querySelector('b').textContent = String(value).padStart(2, '0');
-    });
+    const difference = Math.max(0, REVEAL_AT.getTime()-Date.now());
+    const values = [Math.floor(difference/86400000),Math.floor(difference/3600000)%24,Math.floor(difference/60000)%60,Math.floor(difference/1000)%60];
+    values.forEach((value,index) => { elements.countdown.children[index].querySelector('b').textContent = String(value).padStart(2,'0'); });
     if (difference === 0 && localStorage.getItem(keys.complete) === 'yes') revealFullSite();
   }
-
-  function showPreview() {
-    showOnly(elements.preview);
-    updateCountdown();
-    clearInterval(countdownTimer);
-    countdownTimer = setInterval(updateCountdown, 1000);
-  }
-
+  function showPreview() { showOnly(elements.preview); updateCountdown(); clearInterval(countdownTimer); countdownTimer = setInterval(updateCountdown,1000); }
   function renderTimeline() {
     if (elements.timeline.children.length) return;
-    for (let index = 0; index < 24; index += 1) {
-      const start = new Date(Date.UTC(2024, 11 + index, 12));
-      const end = new Date(Date.UTC(2025, 0 + index, 11));
-      const pad = value => String(value).padStart(2, '0');
-      const range = `${start.getUTCFullYear()}.${pad(start.getUTCMonth() + 1)}.${pad(start.getUTCDate())} — ${end.getUTCFullYear()}.${pad(end.getUTCMonth() + 1)}.${pad(end.getUTCDate())}`;
-      const card = document.createElement('article');
-      card.className = 'month-card';
-      let title = '回憶待補';
-      let copy = '留低位置，等 Sunny 之後補返呢一個月嘅故事。';
-      if (index === 0) {
-        card.classList.add('known');
-        title = '我哋開始咗';
-        copy = '約晚上11時，朗屏巴士總站成為我哋故事嘅起點。';
-      } else if (index === 21) {
-        card.classList.add('known');
-        title = '生日配送完成';
-        copy = '2026年10月4日，生日配送成為兩周年前嘅新回憶。';
-      } else if (index === 23) {
-        title = '兩周年前夕';
-        copy = '等候12月12日正式揭曉完整紀念日內容。';
-      }
-      card.innerHTML = `<small>MONTH ${String(index + 1).padStart(2, '0')} · ${range}</small><strong>${title}</strong><p>${copy}</p>`;
-      elements.timeline.append(card);
-    }
+    MONTHS.forEach((month,index) => {
+      const card = document.createElement('article'); card.className = `month-card ${month.kind === 'open' ? 'low' : 'known'}`;
+      if (month.photos?.length) { const image = document.createElement('img'); image.className = 'month-card-image'; image.src = month.photos[0]; image.alt = (month.alt || [])[0] || `${month.title}回憶相片`; image.loading = 'lazy'; card.append(image); }
+      const body = document.createElement('div'); body.className = 'month-card-body';
+      const small = document.createElement('small'); const strong = document.createElement('strong'); const copy = document.createElement('p');
+      small.textContent = `MONTH ${String(index+1).padStart(2,'0')} · ${monthRange(index)}`; strong.textContent = month.title; copy.textContent = month.copy;
+      body.append(small,strong,copy); card.append(body); elements.timeline.append(card);
+    });
   }
-
   function revealFullSite() {
-    clearInterval(countdownTimer);
-    renderTimeline();
-    elements.section.hidden = false;
-    closeGate({returnToPortal: false});
-    setActiveNav('anniversary');
-    requestAnimationFrame(() => elements.section.scrollIntoView({behavior: 'smooth'}));
+    if (Date.now() < REVEAL_AT.getTime() || localStorage.getItem(keys.complete) !== 'yes') return;
+    clearInterval(countdownTimer); renderTimeline(); elements.section.hidden = false; closeGate({returnToPortal:false}); setActiveNav('anniversary');
+    requestAnimationFrame(() => elements.section.scrollIntoView({behavior:'smooth'}));
   }
 
   elements.form.addEventListener('submit', event => {
-    event.preventDefault();
-    const guess = elements.pass.value.trim();
-    window.dispatchEvent(new CustomEvent('sunny:guess-attempt', {detail:{experience:'anniversary',stage:passStage,guess,noteSelector:'#anniversaryLogNote'}}));
+    event.preventDefault(); const guess = elements.pass.value.trim();
+    window.dispatchEvent(new CustomEvent('sunny:guess-attempt',{detail:{experience:'anniversary',stage:passStage,guess,noteSelector:'#anniversaryLogNote'}}));
     const answer = passStage === 1 ? FIRST_PASSWORD : SECOND_PASSWORD;
     if (normalize(guess) === normalize(answer)) {
       elements.error.textContent = '';
-      if (passStage === 1) {
-        sessionStorage.setItem(keys.stars, '0');
-        showStarGame();
-      } else {
-        sessionStorage.setItem(keys.bus, '0');
-        showBusGame();
-      }
+      if (passStage === 1) { if (sessionStorage.getItem(keys.stars) === null) sessionStorage.setItem(keys.stars,'0'); showStarGame(); }
+      else { if (sessionStorage.getItem(keys.months) === null) saveStamped(new Set()); showMonthGame(); }
       return;
     }
-    const {matched, placed, total} = scoreGuess(guess, answer);
-    elements.error.textContent = `答案共有 ${total} 個字元。今次估中 ${matched} 個，其中 ${placed} 個位置正確。再試一次 💕`;
-    elements.pass.select();
+    const {matched,placed,total} = scoreGuess(guess,answer);
+    elements.error.textContent = `答案共有 ${total} 個字元。今次估中 ${matched} 個，其中 ${placed} 個位置正確。再試一次 💕`; elements.pass.select();
   });
 
-  elements.enter.addEventListener('click', openGate);
-  elements.nav.addEventListener('click', event => {
-    if (!(localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime())) event.preventDefault();
-    openGate();
-  });
-  elements.close.addEventListener('click', () => closeGate());
-  elements.previewBack.addEventListener('click', () => closeGate());
-  document.querySelectorAll('[data-rider]').forEach(button => button.addEventListener('click', () => rideBus(button.dataset.rider)));
-  renderTimeline();
-  if (localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime()) elements.section.hidden = false;
+  elements.enter.addEventListener('click',openGate);
+  elements.nav.addEventListener('click',event => { if (!(localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime())) event.preventDefault(); openGate(); });
+  elements.close.addEventListener('click',() => closeGate()); elements.previewBack.addEventListener('click',() => closeGate());
+  elements.journeyClose.addEventListener('click',() => { elements.journeyCard.hidden = true; });
+  elements.journeyCard.addEventListener('click',event => { if (event.target === elements.journeyCard) elements.journeyCard.hidden = true; });
+  elements.journeyStamp.addEventListener('click',stampMonth);
+  document.addEventListener('keydown',event => { if (event.key === 'Escape' && !elements.journeyCard.hidden) elements.journeyCard.hidden = true; });
+  if (localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime()) {
+    renderTimeline();
+    elements.section.hidden = false;
+  }
 })();
