@@ -58,15 +58,13 @@
   const elements = {
     gate: document.querySelector('#anniversaryGate'), close: document.querySelector('#anniversaryClose'), enter: document.querySelector('#anniversaryEnter'), nav: document.querySelector('#anniversaryNav'),
     passPanel: document.querySelector('#anniversaryPassPanel'), form: document.querySelector('#anniversaryForm'), pass: document.querySelector('#anniversaryPass'), stage: document.querySelector('#anniversaryStage'), title: document.querySelector('#anniversaryPassTitle'), copy: document.querySelector('#anniversaryPassCopy'), label: document.querySelector('#anniversaryLabel'), error: document.querySelector('#anniversaryError'),
-    starGame: document.querySelector('#starGame'), starField: document.querySelector('#starField'), starCount: document.querySelector('#starCount'), starBar: document.querySelector('#starBar'), starMessage: document.querySelector('#starMessage'), starMemory: document.querySelector('#starMemory'), heartRoute: document.querySelector('#heartRouteLive'),
+    starGame: document.querySelector('#starGame'), starField: document.querySelector('#starField'), starCount: document.querySelector('#starCount'), starBar: document.querySelector('#starBar'), starMessage: document.querySelector('#starMessage'), heartRoute: document.querySelector('#heartRouteLive'),
     busGame: document.querySelector('#busGame'), busCount: document.querySelector('#busCount'), busBar: document.querySelector('#busBar'), busMessage: document.querySelector('#busMessage'), tickets: document.querySelector('#monthTickets'),
-    journeyCard: document.querySelector('#journeyCard'), journeyClose: document.querySelector('#journeyClose'), journeyMonth: document.querySelector('#journeyMonth'), journeyTitle: document.querySelector('#journeyTitle'), journeyDate: document.querySelector('#journeyDate'), journeyPhotos: document.querySelector('#journeyPhotos'), journeyAscii: document.querySelector('#journeyAscii'), journeyCopy: document.querySelector('#journeyCopy'), journeyStamp: document.querySelector('#journeyStamp'),
-    preview: document.querySelector('#anniversaryPreview'), countdown: document.querySelector('#anniversaryLiveCountdown'), previewBack: document.querySelector('#previewBack'), section: document.querySelector('#anniversary'), timeline: document.querySelector('#monthTimeline')
+    preview: document.querySelector('#anniversaryPreview'), countdown: document.querySelector('#anniversaryLiveCountdown'), previewBack: document.querySelector('#previewBack'), section: document.querySelector('#anniversary'), releasedStars: document.querySelector('#releasedStarMemories'), timeline: document.querySelector('#monthTimeline')
   };
   if (!elements.gate || !elements.enter) return;
 
   let passStage = 1;
-  let activeMonth = 0;
   let countdownTimer;
 
   function splitGraphemes(value) {
@@ -118,7 +116,6 @@
   function setActiveNav(id) { document.querySelectorAll('.bottom [data-go]').forEach(link => link.classList.toggle('active', link.dataset.go === id)); }
   function showOnly(panel) {
     [elements.passPanel,elements.starGame,elements.busGame,elements.preview].forEach(item => { item.hidden = item !== panel; });
-    elements.journeyCard.hidden = true;
     elements.gate.scrollTop = 0;
   }
   function openGate() {
@@ -131,7 +128,6 @@
   }
   function closeGate({returnToPortal=true}={}) {
     clearInterval(countdownTimer);
-    elements.journeyCard.hidden = true;
     elements.gate.hidden = true;
     document.body.classList.remove('modal-open');
     setBackgroundLocked(false);
@@ -153,13 +149,6 @@
     setTimeout(() => elements.pass.focus(),50);
   }
 
-  function showStarMemory(index, upcoming=false) {
-    const [date,copy] = STAR_MEMORIES[index];
-    elements.starMemory.replaceChildren();
-    const small = document.createElement('small'); const strong = document.createElement('strong');
-    small.textContent = upcoming ? `第一點 · ${date}` : `第 ${index+1} 點 · ${date}`; strong.textContent = copy;
-    elements.starMemory.append(small,strong);
-  }
   function renderStars() {
     const count = readStarCount();
     elements.starCount.textContent = `已點亮 ${count} / ${STAR_TOTAL}`; elements.starBar.style.width = `${count / STAR_TOTAL * 100}%`;
@@ -171,13 +160,12 @@
       button.className = `heart-point${index < count ? ' done' : ''}${index === count ? ' current' : ''}`;
       button.style.left = `${left}%`; button.style.top = `${top}%`; button.textContent = index < count ? '✦' : '✧';
       button.setAttribute('aria-label', index === count ? `點亮第${index+1}個回憶點` : `第${index+1}個回憶點`);
-      button.addEventListener('click', () => { if (index === count) catchStar(); else if (index < count) showStarMemory(index); else elements.starMessage.textContent = '跟住而家最光嗰粒行先 ✨'; });
+      button.addEventListener('click', () => { if (index === count) catchStar(); else if (index < count) elements.starMessage.textContent = '呢粒已經亮咗，跟住最光嗰粒繼續行。'; else elements.starMessage.textContent = '跟住而家最光嗰粒行先 ✨'; });
       elements.starField.append(button);
     });
-    if (count === 0) showStarMemory(0,true);
   }
   function catchStar() {
-    const next = Math.min(STAR_TOTAL, readStarCount()+1); sessionStorage.setItem(keys.stars,String(next)); showStarMemory(next-1);
+    const next = Math.min(STAR_TOTAL, readStarCount()+1); sessionStorage.setItem(keys.stars,String(next));
     elements.starMessage.textContent = next === STAR_TOTAL ? '12點連成一顆心。呢條路線完成啦 ♥' : `第 ${next} 點已亮，下一粒都喺心形路線上。`;
     if (navigator.vibrate) navigator.vibrate(next === STAR_TOTAL ? [25,35,65] : 15);
     renderStars(); if (next === STAR_TOTAL) setTimeout(showSecondPassword,1200);
@@ -186,29 +174,20 @@
 
   function renderTickets() {
     const stamped = readStamped(); elements.tickets.replaceChildren();
-    MONTHS.forEach((month,index) => {
+    for (let index = 0; index < MONTH_TOTAL; index += 1) {
       const button = document.createElement('button'); button.type = 'button';
-      button.className = `month-ticket${month.kind !== 'open' ? ' has-memory' : ''}${stamped.has(index) ? ' stamped' : ''}`;
-      button.dataset.month = String(index); button.innerHTML = `MONTH ${String(index+1).padStart(2,'0')}<span>${month.kind === 'open' ? '留位中' : '有回憶'}</span>`;
-      button.addEventListener('click', () => openMonth(index)); elements.tickets.append(button);
-    });
+      button.className = `month-ticket${stamped.has(index) ? ' stamped' : ''}`;
+      button.dataset.month = String(index); button.innerHTML = `MONTH ${String(index+1).padStart(2,'0')}<span>${stamped.has(index) ? '已蓋印' : '撳一下'}</span>`;
+      button.addEventListener('click', () => stampMonth(index)); elements.tickets.append(button);
+    }
     elements.busCount.textContent = `已收低 ${stamped.size} / ${MONTH_TOTAL} 個月`; elements.busBar.style.width = `${stamped.size / MONTH_TOTAL * 100}%`;
   }
-  function openMonth(index) {
-    activeMonth = index; const month = MONTHS[index]; const stamped = readStamped();
-    elements.journeyCard.dataset.kind = month.kind; elements.journeyMonth.textContent = `MONTH ${String(index+1).padStart(2,'0')} · ${stamped.has(index) ? '已蓋印' : '未蓋印'}`;
-    elements.journeyTitle.textContent = month.title; elements.journeyDate.textContent = monthRange(index); elements.journeyCopy.textContent = month.copy;
-    elements.journeyAscii.hidden = !month.ascii; elements.journeyAscii.textContent = month.ascii || ''; elements.journeyPhotos.replaceChildren();
-    (month.photos || []).forEach((source,photoIndex) => { const image = document.createElement('img'); image.src = source; image.alt = (month.alt || [])[photoIndex] || `${month.title}回憶相片`; image.loading = 'lazy'; elements.journeyPhotos.append(image); });
-    elements.journeyPhotos.hidden = !month.photos?.length; elements.journeyStamp.textContent = stamped.has(index) ? '呢張已經收低 ✓' : month.action;
-    elements.journeyStamp.classList.toggle('done',stamped.has(index)); elements.journeyCard.hidden = false; setTimeout(() => elements.journeyClose.focus(),40);
-  }
-  function stampMonth() {
+  function stampMonth(index) {
     const stamped = readStamped();
-    if (!stamped.has(activeMonth)) { stamped.add(activeMonth); saveStamped(stamped); if (navigator.vibrate) navigator.vibrate(stamped.size === MONTH_TOTAL ? [30,35,80] : 12); }
-    elements.journeyCard.hidden = true; renderTickets();
+    if (!stamped.has(index)) { stamped.add(index); saveStamped(stamped); if (navigator.vibrate) navigator.vibrate(stamped.size === MONTH_TOTAL ? [30,35,80] : 12); }
+    renderTickets();
     if (stamped.size === MONTH_TOTAL) { localStorage.setItem(keys.complete,'yes'); sessionStorage.setItem(keys.step,'preview'); elements.busMessage.textContent = '24張車票收齊。去睇倒數啦 ♥'; setTimeout(showPreview,700); }
-    else elements.busMessage.textContent = `第 ${activeMonth+1} 個月已收低；仲有 ${MONTH_TOTAL-stamped.size} 張。`;
+    else elements.busMessage.textContent = `第 ${index+1} 個月已蓋印；仲有 ${MONTH_TOTAL-stamped.size} 張。`;
   }
   function showMonthGame() { sessionStorage.setItem(keys.step,'months'); showOnly(elements.busGame); renderTickets(); }
 
@@ -219,6 +198,16 @@
     if (difference === 0 && localStorage.getItem(keys.complete) === 'yes') revealFullSite();
   }
   function showPreview() { showOnly(elements.preview); updateCountdown(); clearInterval(countdownTimer); countdownTimer = setInterval(updateCountdown,1000); }
+  function renderReleasedStars() {
+    if (elements.releasedStars.children.length) return;
+    STAR_MEMORIES.forEach(([date,copy],index) => {
+      const card = document.createElement('article');
+      const point = document.createElement('span'); const body = document.createElement('div');
+      const small = document.createElement('small'); const strong = document.createElement('strong');
+      point.textContent = '✦'; small.textContent = `POINT ${String(index+1).padStart(2,'0')} · ${date}`; strong.textContent = copy;
+      body.append(small,strong); card.append(point,body); elements.releasedStars.append(card);
+    });
+  }
   function renderTimeline() {
     if (elements.timeline.children.length) return;
     MONTHS.forEach((month,index) => {
@@ -232,7 +221,7 @@
   }
   function revealFullSite() {
     if (Date.now() < REVEAL_AT.getTime() || localStorage.getItem(keys.complete) !== 'yes') return;
-    clearInterval(countdownTimer); renderTimeline(); elements.section.hidden = false; closeGate({returnToPortal:false}); setActiveNav('anniversary');
+    clearInterval(countdownTimer); renderReleasedStars(); renderTimeline(); elements.section.hidden = false; closeGate({returnToPortal:false}); setActiveNav('anniversary');
     requestAnimationFrame(() => elements.section.scrollIntoView({behavior:'smooth'}));
   }
 
@@ -253,11 +242,8 @@
   elements.enter.addEventListener('click',openGate);
   elements.nav.addEventListener('click',event => { if (!(localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime())) event.preventDefault(); openGate(); });
   elements.close.addEventListener('click',() => closeGate()); elements.previewBack.addEventListener('click',() => closeGate());
-  elements.journeyClose.addEventListener('click',() => { elements.journeyCard.hidden = true; });
-  elements.journeyCard.addEventListener('click',event => { if (event.target === elements.journeyCard) elements.journeyCard.hidden = true; });
-  elements.journeyStamp.addEventListener('click',stampMonth);
-  document.addEventListener('keydown',event => { if (event.key === 'Escape' && !elements.journeyCard.hidden) elements.journeyCard.hidden = true; });
   if (localStorage.getItem(keys.complete) === 'yes' && Date.now() >= REVEAL_AT.getTime()) {
+    renderReleasedStars();
     renderTimeline();
     elements.section.hidden = false;
   }

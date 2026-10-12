@@ -45,6 +45,11 @@
 .journey-card[data-kind="quiet"] .journey-card-inner{background:linear-gradient(165deg,#f4ede5,#dddccf)}
 .journey-note{margin:10px 0 0;text-align:center;color:#cdbdce;font-size:9px}
 
+.released-star-grid{display:grid;gap:9px;margin:18px 0 36px}
+.released-star-grid article{display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:start;padding:14px;border:1px solid rgba(112,71,85,.13);border-radius:15px;background:rgba(255,250,240,.78)}
+.released-star-grid article>span{display:grid;width:35px;height:35px;place-items:center;border-radius:50%;background:#704755;color:#f8d8a6;font-size:18px;box-shadow:0 5px 13px rgba(112,71,85,.2)}
+.released-star-grid small{display:block;margin-bottom:5px;color:#a27175;font-size:8px;font-weight:850;letter-spacing:.1em}
+.released-star-grid strong{display:block;color:#5b3541;font-size:13px;line-height:1.55}
 .month-card{overflow:hidden;padding:0}.month-card-image{display:block;width:100%;height:132px;background:#eaded8;object-fit:contain}.month-card-body{padding:15px}.month-card.low{opacity:.78}.relationship-quote{line-height:1.7}
 @media(max-width:520px){.heart-map{min-height:430px}.heart-point{width:40px;height:40px}.ticket-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-height:43svh}.journey-card{padding:10px}.journey-card-inner{padding:19px}.journey-photo-strip img{flex-basis:88%}}
 @media(prefers-reduced-motion:reduce){.heart-point.current,.preview-heart{animation:none}.heart-route-live{transition:none}.journey-card-inner{animation:none}}

@@ -191,7 +191,7 @@
     @media(max-width:520px){.station-grid{grid-template-columns:1fr}.station-card{min-height:188px}.anniversary-stats{grid-template-columns:1fr 1fr}.bottom a{font-size:9px}.bottom a i{font-size:18px}}
 
   </style>
-  <link rel="stylesheet" href="anniversary-v2.css?v=2">
+  <link rel="stylesheet" href="anniversary-v2.css?v=3">
 </head>
 <body class="locked"><div class="entry-gate" id="entryGate" role="dialog" aria-modal="true" aria-label="私人紀念站入口"><button class="entry-back" id="entryBack" type="button" aria-label="返回私人站大堂" title="返回私人站大堂">←</button><div class="entry-card" id="entryCard"><div class="entry-poster"><img id="entryPoster" src="images/memory-01.webp" alt="生日回憶海報"></div><p class="eyebrow" id="entryStage">FIRST CHECK · 01 / 02</p><h2 id="entryTitle">先核對第一個<br>美好暗號</h2><p id="entryCopy">提示：通行證持有人只有一位 💕</p><div class="entry-order"><span>PRIVATE FILE</span><b>2024—∞</b></div><form id="entryForm"><label for="entryPass" id="entryLabel">第一個入口口令</label><input id="entryPass" autocomplete="off" placeholder="輸入口令" aria-describedby="entryError entryLogNote" maxlength="200" autofocus><button type="submit" id="entryButton">進入下一頁</button><p class="entry-error" id="entryError" aria-live="polite"></p></form><p class="entry-note" id="entryLogNote">暗號嘗試會由 Sunny 保存，留作私人回憶 💕。</p><p class="entry-note">SUNNY × TSZYING · PRIVATE EDITION</p></div><section class="entry-game" id="loveChase" aria-labelledby="chaseTitle" hidden><div class="entry-game-inner"><p class="eyebrow">LOVE CHECK · 01.5 / 02</p><h2 id="chaseTitle">捉住 12 個「愛你」</h2><p class="entry-game-copy">捉到第 5 個之後會出現假「愛你」；撳錯會退後一格。真嗰個後段會縮細兼發光 💕</p><div class="game-progress"><strong><span id="chaseCount">已捉到 0 / 12</span><span>LOVE HUNT</span></strong><div class="game-progress-track"><i id="chaseBar"></i></div></div><div class="love-playfield"><button class="love-target" id="loveTarget" type="button" aria-describedby="chaseCount">愛你</button></div><p class="entry-game-status" aria-live="polite" id="chaseLive"></p></div></section><section class="entry-game heart-challenge" id="heartChallenge" aria-labelledby="heartTitle" hidden><div class="entry-game-inner"><p class="eyebrow">FINAL LOVE CHECK</p><h2 id="heartTitle">撳爆呢顆心</h2><p class="entry-game-copy">撳 24 下。過一半之後心心會開始走位，最後幾下仲會縮細 💕</p><div class="game-progress"><strong><span id="heartCount">0 / 24</span><span>HEART POWER</span></strong><div class="game-progress-track"><i id="heartBar"></i></div></div><div class="heart-stage"><button class="heart-button" id="heartButton" type="button" aria-describedby="heartCount" aria-label="撳大心心"><span aria-hidden="true">♥</span></button><span class="heart-instruction">每撳一下，心意再大一點</span></div></div></section><section class="entry-game love-finale" id="loveFinale" aria-labelledby="finaleTitle" hidden><div class="finale-stage" id="finaleWords" aria-hidden="true"></div><div class="finale-copy"><p class="eyebrow">SPECIAL DELIVERY COMPLETE</p><h2 id="finaleTitle">美「臀」愛意<br>已送達</h2><p>愛你、愛你、愛你——全部都係畀你。</p><button class="finale-skip" id="skipFinale" type="button">立即收下</button></div></section></div><div class="app">
   <section class="screen active story-section portal-section" id="portal" data-section="portal">
@@ -260,10 +260,14 @@
       <div class="anniversary-stats"><div><span>NEXT ANNIVERSARY</span><b id="anniversaryCountdown">正在計算倒數</b></div><div><span>TOGETHER</span><b id="togetherDays">正在計算日數</b></div></div>
     </div>
     <div class="section-shell">
-      <p class="section-title">OUR STORY · TOGETHER</p>
-      <h2>我哋呢24個月</h2>
-      <p class="section-lead">唔係每個月都要發生大事先值得記住。有相、有故事嘅就放低；未寫好嘅，留返個位慢慢補。</p>
+      <p class="section-title">THE HEART ROUTE · REVEALED</p>
+      <h2>心形路線入面嘅12段回憶</h2>
+      <p class="section-lead">遊戲嗰12點，依家先正式打開。由開始嗰晚，一路行到我哋第二年。</p>
+      <div class="released-star-grid" id="releasedStarMemories" aria-label="12段心形路線回憶"></div>
 
+      <p class="section-title">OUR 24 MONTHS · REVEALED</p>
+      <h2>24個月回憶車票</h2>
+      <p class="section-lead">唔係每個月都要發生大事先值得記住。有相、有故事嘅就放低；未寫好嘅，留返個位慢慢補。</p>
       <div class="month-grid" id="monthTimeline" aria-label="24個月回憶時間線"></div>
 
       <blockquote class="relationship-quote">「由 12 月 12 日開始，普通日子都因為同你一齊，變成值得記住嘅日子。」</blockquote>
@@ -334,38 +338,25 @@
         <div class="anniversary-box star-game-box">
           <p class="eyebrow">LOVE CONSTELLATION · 12 / 12</p>
           <h2>12點星光路線</h2>
-          <p>沿住會發光嗰一點撳落去。每點亮一粒星，就會開返一小段我哋嘅回憶；12粒連埋一齊，就係一顆心。</p>
+          <p>沿住會發光嗰一點撳落去，將12粒星連成一顆心。入面藏住嘅故事，要到12月12日先打開。</p>
           <div class="anniversary-progress"><strong><span id="starCount">已點亮 0 / 12</span><span>12 · 12</span></strong><div class="anniversary-progress-track"><i id="starBar"></i></div></div>
           <p class="star-message" id="starMessage" aria-live="polite">由最下面嗰粒星開始</p>
           <div class="heart-map" id="starField" aria-label="由12個回憶點組成的心形星光路線">
             <svg viewBox="0 0 100 100" aria-hidden="true"><polyline class="heart-route-base" points="50,84 34,69 21,54 15,37 20,23 34,20 50,36 66,20 80,23 85,37 79,54 66,69 50,84"/><polyline class="heart-route-live" id="heartRouteLive" pathLength="100" points="50,84 34,69 21,54 15,37 20,23 34,20 50,36 66,20 80,23 85,37 79,54 66,69 50,84"/></svg>
-            <div class="heart-memory" id="starMemory"><small>START HERE</small><strong>由朗屏巴士總站嗰晚開始。</strong></div>
           </div>
         </div>
       </section>
       <section class="anniversary-panel" id="busGame" hidden>
         <div class="anniversary-box journey-box">
-          <p class="eyebrow">OUR 24 MONTHS · MEMORY TICKETS</p>
-          <h2>24個月回憶車票</h2>
-          <p class="journey-intro">今次唔使鬥快。逐張車票撳開，睇返當月嘅相同小事，再幫我哋蓋個印。24張收齊先到站。</p>
+          <p class="eyebrow">24 MONTHS · STAMP GAME</p>
+          <h2>24個月蓋印挑戰</h2>
+          <p class="journey-intro">逐張撳落去，收齊24個月份印章先到站。每張入面藏住嘅回憶，12月12日先一齊揭曉。</p>
           <div class="anniversary-progress"><strong><span id="busCount">已收低 0 / 24 個月</span><span>11:00 PM</span></strong><div class="anniversary-progress-track"><i id="busBar"></i></div></div>
-          <div class="ticket-grid" id="monthTickets" aria-label="24個月回憶車票"></div>
-          <p class="star-message" id="busMessage" aria-live="polite">揀一張你想先睇嘅車票</p>
-          <p class="journey-note">有幾個月仲未寫好，我已經留咗位，之後再慢慢補返。</p>
+          <div class="ticket-grid" id="monthTickets" aria-label="24個月蓋印遊戲"></div>
+          <p class="star-message" id="busMessage" aria-live="polite">揀一張未蓋印嘅月份卡</p>
+          <p class="journey-note">遊戲期間唔會顯示相片、日期或者故事。</p>
         </div>
       </section>
-      <div class="journey-card" id="journeyCard" role="dialog" aria-modal="true" aria-labelledby="journeyTitle" hidden>
-        <div class="journey-card-inner">
-          <button class="journey-card-close" id="journeyClose" type="button" aria-label="關閉回憶車票">×</button>
-          <p class="eyebrow" id="journeyMonth">MONTH 01</p>
-          <h3 id="journeyTitle">我哋開始咗</h3>
-          <p class="journey-date" id="journeyDate"></p>
-          <div class="journey-photo-strip" id="journeyPhotos" hidden></div>
-          <pre class="journey-ascii" id="journeyAscii" hidden></pre>
-          <p class="journey-copy" id="journeyCopy"></p>
-          <button class="journey-action" id="journeyStamp" type="button">收低呢張回憶</button>
-        </div>
-      </div>
       <section class="anniversary-panel" id="anniversaryPreview" hidden>
         <div class="anniversary-box">
           <span class="preview-heart" aria-hidden="true">♥</span>
@@ -386,4 +377,4 @@
     <a href="#memory" data-go="memory"><i>▧</i><span>回憶</span></a>
     <a href="#gift" data-go="gift"><i>♢</i><span>禮物</span></a>
   </nav>
-</div><script src="guess-log.js?v=2"></script><script src="entry-flow.js?v=12"></script><script src="anniversary-flow.js?v=2"></script></body></html>
+</div><script src="guess-log.js?v=2"></script><script src="entry-flow.js?v=12"></script><script src="anniversary-flow.js?v=3"></script></body></html>
